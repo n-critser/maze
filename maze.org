@@ -1,0 +1,53 @@
+
+
+* Design: 
+  4 windows 
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % instructs  %                                              %
+  %    &       %                 maze                         %
+  % stats      %                 proper                       %
+  %            %                                              %
+  %            %                                              % 
+  %            %                                              % 
+  +            +                                              +
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %          info about the game or error messages            %
+  %                                                           %
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  menu_win = window for instructions and stats
+
+  maze = window for the maze 
+  
+  info = window for error messages or other 
+
+  stdscr = standard screen made by default 
+
+
+
+  
+* dirs
+  - algors
+    - pathfinding
+  - test
+    - unit tests 
+  - interface
+    - ncurses representation for the grid
+  - grid 
+    - grid.h
+
+
+
+* grid 
+  - grid.h  2 d representation for maze 
+    { [ 0,0,0,0],
+      [ 1,1,1,0],
+      [ 0,0,1,0],
+      [ 1,0,0,0] } 
+
+    int coordTest(y,x);
+    int setWall(y,x);
+    int clearWall(y,x);
+
+
