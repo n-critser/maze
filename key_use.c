@@ -1,3 +1,4 @@
+/* gcc -Wall key_use.c -lncurses*/
 #include <stdio.h>
 #include <ncurses.h>
 
@@ -16,16 +17,18 @@ char * choices [] = {
         "Left",
         "Right",
         "Down ",
-        "Exit",
+        "DEAD",
 };
 
 int n_choices = sizeof(choices)/sizeof(char *);
 
 void print_menu(WINDOW *menu_win, int highlight);
 void show_maze(WINDOW *maze);
+void build_maze(WINDOW *maze);
 
 /* main loop */
 int main(){
+        /* pointers to windows */
         WINDOW *menu_win;
         WINDOW *maze;
         int mainY,mainX, mazeY,mazeX;
@@ -49,7 +52,7 @@ int main(){
         mvprintw(33, 0, "menu window dimensions\n Rows= %3d , Cols=%3d", starty, startx);
         mvprintw(35, 0, "maze window dimensions\n Rows= %3d , Cols=%3d", mazeY, mazeX);
         menu_win = newwin(HEIGHT, WIDTH, starty, startx);
-        maze = newwin(MAZE_H,MAZE_W,mazeY,mazeX);
+        //maze = newwin(MAZE_H,MAZE_W,mazeY,mazeX);
         maze = newwin(mazeY,mazeX,mazeY,mazeX);
         keypad(menu_win, TRUE);
         
@@ -57,7 +60,7 @@ int main(){
         refresh();
         print_menu(menu_win, highlight);
         show_maze(maze);
-
+        build_maze(maze);
         int goY,goX;
         goY=goX=1;
         
@@ -78,6 +81,7 @@ int main(){
                         else {
                                 mvwprintw(maze,goY,goX,"%c",'X');
                         }
+                        highlight = 1;
                         wrefresh(maze);
                         break;
                 case KEY_DOWN: /* */
@@ -92,8 +96,8 @@ int main(){
                         else {
                                 mvwprintw(maze,goY,goX,"%c",'X');
                         }
+                        highlight = 4;
                         wrefresh(maze);
-
                         break;
                         
                 case KEY_LEFT: /*   */
@@ -104,8 +108,8 @@ int main(){
                         else {
                                 mvwprintw(maze,goY,goX,"%c",'X');
                         }
+                        highlight = 2;
                         wrefresh(maze);
-
                         break;
                 case KEY_RIGHT:
                         if (goX<mazeX-2  ){
@@ -116,8 +120,8 @@ int main(){
                         else {
                                 mvwprintw(maze,goY,goX,"%c",'X');
                         }
+                        highlight = 3;
                         wrefresh(maze);
-
                         break;
                 case 10:
                         choice = highlight;
@@ -167,3 +171,44 @@ void show_maze(WINDOW *maze){
         mvwprintw(maze,y,x,"I=%d, %s",i,"helloworld");
         wrefresh(maze);
 }
+
+
+void build_maze(WINDOW *maze){
+        int row,col;
+        getmaxyx(maze,row,col);
+        int grid [col][row];
+        int i,j;
+        for (i = 0 ; i < col; i++){
+                for (j=0; j< row; j++){
+                        if (i %3 == 0){
+                                grid[i][j]=1;
+                        }else {
+                                grid[i][j]=0;
+                        }
+                        mvwprintw(maze,j,i,"%d",grid[i][j]);
+                        wrefresh(maze);
+                        
+                }
+        }       
+
+}
+
+
+void build_grid(WINDOW *win, int row, int col){
+        int grid[col][row];
+        int i,j;
+        for (i = 0 ; i < col; i++){
+                for (j=0; j< row; j++){
+                        if (i %3 == 0){
+                                grid[i][j]=1;
+                        }else {
+                                grid[i][j]=0;
+                        }
+                        mvwprintw(win,j,i,"%d",grid[i][j]);
+                        wrefresh(win);
+                        
+                }
+        }       
+        
+}
+
