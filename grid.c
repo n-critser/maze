@@ -1,7 +1,11 @@
 #include<stdio.h>
+#include "maze.h"
+#define log(expr) printf(#expr " %s\n", expr)
 
+#define ROWS 20
+#define COLS 30
 
-
+int grid[][];
 
 void build_grid(int row, int col){
         int grid[col][row];
@@ -19,3 +23,8 @@ void build_grid(int row, int col){
         
 }
 
+
+int  is_free(int y,int x){
+        
+        return grid[x][y];
+}
