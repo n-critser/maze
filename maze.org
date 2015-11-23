@@ -1,4 +1,107 @@
 
+* Requirements
+  1. terminal interface depicting a player in a maze trying to get to a goal
+
+  2. player attempts to evade the evil monsters and get to the goal
+
+  3. mazes are created randomly with a level of hardness associated with the players current level in the game
+
+  4. player can answer descrete math questions about number theory in order to traverse multiple moves in a single turn.
+
+  5. player chooses monster path finding algorithm
+  6. monsters can be kill only player or kill everyone
+  7. player can get decoys from hidden keys , decoys will overide monster pathfinding making them loose their path to player.
+  8. pits can  open up during game at random interval and swallow anything (player, monster, dancing bears).
+  9. bent arrows are shot from arrow walls with random bendability ( bendability == number of curves they can make to sustain flight) .
+  10. search algorithms for graphs should be used for monster maze killers
+      - a-star
+      - djykstras algorithm 
+      - depth first 
+      - breadth first
+* Domain-Nouns-for-Model 
+  - player
+  - maze
+  - terminal
+  - search algorithm
+  - boobytrap
+    - pit
+    - arrow
+  - wall
+  - goal
+  - level
+  - monster
+  - interval
+  - dancing bear
+* Usecases
+** usecase-template: synopsis
+   - actor         :  
+   - pre-action    : 
+   - sunny day     :
+   - rainy day     :
+   - postcondition : 
+** usecase: user starts game 
+   - actor         : user
+   - pre-action    : game isn't running 
+   - sunny day     : player starts game, picks a monster algorithm, picks a level of hardness, and presses (begin). a maze appears with a player and a goal. and monsters and booby traps . 
+   - rainy day     : player starts game, something goes wrong . player is given the option to let the game crash and restart or try to continue. suggested actions for different error are given if the (kill) option is chosen.
+   - postcondition : a maze is created and added to the maze database for quick retrieaval. a game with stats is stored in the db also for later. 
+
+
+** usecase: user sets up game 
+   - actor         : user 
+   - pre-action    : system display "Setup" screen 
+   - sunny day     : user enters: 
+                   - (MSA) monster search algorithm
+                   - (VS) verbose search
+                   - (HL) hardness level
+                   - (MNR) monster number range
+                   System verifies input 
+
+   - rainy day     : user enters incorrect data, 
+                   System restarts at "Setup" screen with warning 
+
+   - postcondition : System loads a game session,
+                   System shows "Lets Play" screen 
+                   Game starts
+
+** usecase: player moves to goal
+   actor         : user
+   pre-action    : System displays "Lets play" screen, then maze appears
+   sunny day     : user guides player up/down/left/right through maze
+                   player reaches goal 
+                   System verifies player and goal are at same position
+   rainy day     : Player moves to wall and repeatedly hits 
+                   After n-tries system ends the game
+                   Maze restarts from beginning 
+
+   postcondition : System shows "Congratulations" screen 
+                   System starts next maze 
+
+** usecase: monster kills player
+   actor         :  monster (system bot)
+   pre-action    : Player moves on screen
+   sunny day     : Monster moves to players position
+                   System verifies player and monster are at same position
+   rainy day     :
+   postcondition : System shows "You're dead" screen
+                   System shows "Restart" screen with 3 options 
+                   - replay same maze
+                   - get new maze
+                   - quit
+
+** usecase: player falls into pit
+   actor         :  
+   pre-action    : 
+   sunny day     :
+   rainy day     :
+   postcondition : 
+
+** usecase: player killed by arrow
+   actor         :  
+   pre-action    : 
+   sunny day     :
+   rainy day     :
+   postcondition : 
 
 * Design: 
   4 windows 
@@ -51,3 +154,27 @@
     int clearWall(y,x);
 
 
+* uml
+title Register as User <roa>
+note right: <<precondition>> -- \n<<postcondition>> user credentials stored
+(*) -->  "<<UA>>\nSelect 'register' option"
+  note right: <<scene>>\n<<button/link>>\nregister
+  --> "<<UA>>\nSubmit entered credentials"
+  note right: <<scene>>\n<<input attributes>>\n username, email\n<<button/link>>\nsubmit
+  if "credentials valid?                                   " then
+  --> [  true]  (*)
+else
+  ---> [  false] "<<UA>>\nSubmit entered credentials"
+endif
+
+* cookbook
+#+begin_src ditaa :file ditaa-simpleboxes-unsep.png :cmdline -E
++---------+
+|         |
+| Foo     |
+|         |
++----+----+---+
+|Bar |Baz     |
+|    |        |
++----+--------+
+#+end_src

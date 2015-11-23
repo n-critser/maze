@@ -1,0 +1,24 @@
+#+DATE: [2015-09-18 Fri]
+
+* NOUNS
+  - player
+  - maze
+  - terminal
+  - user
+  - search algorithm
+  - arrow
+  - wall
+  - goal
+  - level
+  - monster
+  - interval
+  - dancing bear
+  - pit
+
+
+* DITAA
+
+                Player
+
+
+
