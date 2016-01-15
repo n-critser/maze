@@ -5,4 +5,9 @@ int build_grid(int,int);
 void show_grid();
 int destroy_grid();
 
+struct vertex{
+        int y;
+        int x;
+};
+
 #endif

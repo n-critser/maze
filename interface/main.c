@@ -1,6 +1,7 @@
 #include<stdio.h>
-#include"maze.h"
-#include"grid.h"
+#include"../graph/maze.h"
+#include"../graph/grid.h"
+//#include "linuxList.h"
 
 /* compile : gcc -Wall main.c grid.c */
 /*  TODO: grid representation */
