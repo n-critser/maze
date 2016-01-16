@@ -253,8 +253,10 @@ distance = calculated from s (root)
 * Tasks:
 ** DONE graph: convert test_queue.c into queue.h/c for modular usage
    DEADLINE: <2016-01-10 Sun>
-** NEXT move all modules into correct directory and add makefile
+** DONE move all modules into correct directory and add makefile
    DEADLINE: <2016-01-15 Fri>
+** NEXT update makefiles to build interface & all object files
+   DEADLINE: <2016-01-16 Sat>
 ** NEXT graph: implement BFS with a graph,queue,+++
    DEADLINE: <2016-01-16 Sat>
 ** NEXT graph: consolidate graph from grid.h/c and maze.h/c
