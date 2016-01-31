@@ -235,6 +235,7 @@ colors = white(undiscovered) ,grey (discovered) ,black (traversed)
 distance = calculated from s (root)
 
 * interface:
+#+CATEGORY:interface
   terminal with ascii graphic representation of graph matrix depicting
   - (0)player
   - (1)goal
@@ -242,25 +243,6 @@ distance = calculated from s (root)
   - (3)blank
   - (4)monsters
   5 possible states for a graph node to be in
-* graph
-  mathmatical model of the maze in a given instant
-  algorithms for maze building act here
-  algorithms for search,pathfinding act here
-* handlers
-  accepts initial graph and sends to interface to show initial state
-  takes user input from interface and sends to graph to update model
-  takes update to graph and repaints interface with state update
-* Tasks:
-** DONE graph: convert test_queue.c into queue.h/c for modular usage
-   DEADLINE: <2016-01-10 Sun>
-** DONE move all modules into correct directory and add makefile
-   DEADLINE: <2016-01-15 Fri>
-** NEXT update makefiles to build interface & all object files
-   DEADLINE: <2016-01-16 Sat>
-** NEXT graph: implement BFS with a graph,queue,+++
-   DEADLINE: <2016-01-16 Sat>
-** NEXT graph: consolidate graph from grid.h/c and maze.h/c
-   DEADLINE: <2016-01-10 Sun>
 ** NEXT interface : static maze with game logic
    DEADLINE: <2016-01-14 Thu>
    - minimum-game:
@@ -272,6 +254,45 @@ distance = calculated from s (root)
      - die
      - collision
      - quit
+* graph
+#+CATEGORY:graph
+  mathmatical model of the maze in a given instant
+  algorithms for maze building act here
+  algorithms for search,pathfinding act here
+** NEXT graph: consolidate graph from grid.h/c and maze.h/c
+   DEADLINE: <2016-01-10 Sun>
+** DONE graph: convert test_queue.c into queue.h/c for modular usage
+   DEADLINE: <2016-01-10 Sun>
+** NEXT graph: implement BFS with a graph,queue,+++
+   DEADLINE: <2016-01-16 Sat>
+* handlers
+#+CATEGORY:handlers
+  accepts initial graph and sends to interface to show initial state
+  takes user input from interface and sends to graph to update model
+  takes update to graph and repaints interface with state update
+* playLogic
+#+CATEGORY:playLogic
+  objects that define the play part of the game. 
+  includes:
+     1. agent movement
+     2. colision result
+     3. spawning / killing
+     4. scoring
+     5. persistance of scores
+
+* devOps:
+#+CATEGORY:devOps
+  anythign to do with building,deploying, and whatever doesn't fall
+  into a well defined section
+** DONE move all modules into correct directory and add makefile
+   DEADLINE: <2016-01-15 Fri>
+** NEXT update makefiles to build interface & all object files
+   DEADLINE: <2016-01-16 Sat>
 ** NEXT Make: add interface , graph, xxx to makefiles
    DEADLINE: <2016-01-17 Sun>
+
+
+
+
+
 

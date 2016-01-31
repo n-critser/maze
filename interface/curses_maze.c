@@ -8,6 +8,12 @@
 #define MAZE_W 60
 #define MAZE_H 40
 
+struct pos {
+        int y;
+        int x;
+};
+
+
 int starty = 0;
 int startx = 0;
 
@@ -43,16 +49,20 @@ int main(){
         clear();
         noecho();
         cbreak();
+        /* set mainY and mainX based on window size */
         getmaxyx(stdscr,mainY,mainX);
         mvprintw(30, 0, "Main window dimensions\n Rows= %3d , Cols=%3d", mainY, mainX);
+        /*set startY and startX as 1/3 (mainY -HEIGHT)  and 1/3(mainX-WIDTH) */
         starty = (mainY - HEIGHT)/ 3;
         startx = (mainX - WIDTH)/ 3;
+        /*set mazeY and mazeX as 1/2 mainY&mainX */
         mazeY = mainY/2;
         mazeX = mainX/2;
         mvprintw(33, 0, "menu window dimensions\n Rows= %3d , Cols=%3d", starty, startx);
         mvprintw(35, 0, "maze window dimensions\n Rows= %3d , Cols=%3d", mazeY, mazeX);
         menu_win = newwin(HEIGHT, WIDTH, starty, startx);
         //maze = newwin(MAZE_H,MAZE_W,mazeY,mazeX);
+        /* why create a new window with  */
         maze = newwin(mazeY,mazeX,mazeY,mazeX);
         keypad(menu_win, TRUE);
         
@@ -172,6 +182,11 @@ void show_maze(WINDOW *maze){
         wrefresh(maze);
 }
 
+
+int detect_collision(){
+
+        return -99;
+}
 
 void build_maze(WINDOW *maze){
         int row,col;
