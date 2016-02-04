@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <time.h>
 #include <signal.h>
+#include "../graph/grid.h"
 
 /*
   struct termios {
@@ -22,6 +23,8 @@ struct maze_face{
         int maze_num;
         int score;
         int x,y;
+        struct vertex *goal;
+        struct vertex *player;
         
 };
 
@@ -32,7 +35,7 @@ void sys_io_restore(){
         tcsetattr(fileno(stdin),TCSANOW,&restore);
 }
 
-void maze_game_cleanup(int sig){
+void maze_game_clean(int sig){
         sys_io_restore();
 }
 
@@ -53,8 +56,16 @@ int set_maze_ioconf(){
 
 int maze_game_init(struct maze_face *face, int width,int height){
         int x,y;
+        face->player=malloc(sizeof(struct vertex));
+        face->goal=malloc(sizeof(struct vertex));
         face->width=width;
         face->height=height;
+        face->player->x=0;
+        face->player->y=0;
+        face->goal->x=width-1;
+        face->goal->y=height-1;
+        face->maze_num=0;
+        face->score=0;
         face->board=malloc(sizeof(char *)*width);
         for (x=0; x<width; x++){
                 face->board[x] = malloc(sizeof(char)*height);
@@ -79,6 +90,9 @@ void maze_show_face(struct maze_face * face){
         for(x=0; x<space;x++)
                 printf("\n");
         printf("[MAZE#: %d | SCORE: %d]\n", face->maze_num, face->score);
+        printf("player(x,y):(%d,%d) ",face->player->x,face->player->y);
+        printf("goal(x,y):(%d,%d) ",face->goal->x,face->goal->y);
+        printf("\n");
         for (x=0;x<2*face->width;x++)
                 printf("-");
         printf("\n");
@@ -95,6 +109,22 @@ void maze_show_face(struct maze_face * face){
         printf("\n");
         
         
+}
+
+int maze_test_win(struct maze_face * face){
+        if ( face->player == face->goal)
+                return 1;
+        else
+                return 0;
+}
+
+int maze_quit(struct maze_face * face){
+        
+        /* signal will be -1 or some char*/
+        maze_face_clean(face);
+        int signal='q';
+        maze_game_clean(signal);
+        return 0;
 }
 
 int maze_play(int width, int height){
@@ -115,8 +145,8 @@ int maze_play(int width, int height){
                         break;
                 }
         }
-        maze_face_clean(&face);
-        sys_io_restore();
+        maze_quit(&face);
+
         
         return -99;        
 }
