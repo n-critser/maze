@@ -5,7 +5,7 @@
 #include <time.h>
 #include <signal.h>
 #include "../graph/grid.h"
-
+#include "../constants/constants.h"
 /*
   struct termios {
   tcflag_t c_iflag;   input specific flags (bitmask)
@@ -16,7 +16,7 @@
 };
  */
 
-enum DIRECTION {north,east,south,west};
+//enum DIRECTION {north,east,south,west};
 
 
 
@@ -63,6 +63,11 @@ int set_maze_ioconf(){
 
 int maze_game_init(struct maze_face *face, int width,int height){
         int x,y;
+        /* only the face output should be set/manipulated here
+         * other values should move to ioController and be taken as params to
+         * maze_face_init
+
+         */
         face->win=0;
         face->pChar='@';
         face->gChar='#';
@@ -76,6 +81,7 @@ int maze_game_init(struct maze_face *face, int width,int height){
         face->goal->y=height-1;
         face->maze_num=0;
         face->score=0;
+        /* */
         face->board=malloc(sizeof(char *)*width);
         for (x=0; x<width; x++){
                 face->board[x] = malloc(sizeof(char)*height);
