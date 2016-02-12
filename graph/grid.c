@@ -5,8 +5,6 @@
 #include "queue.h"
 #define log(expr) printf(#expr " %s\n", expr)
 
-#define ROWS 10
-#define COLS 10
 
 /* need a Queue for BFS
    linkedList for adjList
@@ -20,8 +18,8 @@ static void instructions(void);
 struct yxGrid {
         int rows;
         int cols;
-        int grid[ROWS][COLS];
-        int maze[ROWS][COLS];
+        int **grid;
+        int **maze;
         int dist_to_goal;
         char border;
         char wall;
@@ -35,11 +33,15 @@ struct yxGrid {
 
 
 
-static int init_grid(){
+static int init_grid(int row, int col){
+        //arr  = (int **)malloc(sizeof(int *) * r);
+        //arr[0] = (int *)malloc(sizeof(int) * c * r);
         srand(time(NULL));
         gridP=malloc(sizeof(struct yxGrid));
-        gridP->rows=ROWS;
-        gridP->cols=COLS;
+        gridP->grid = (int **)malloc(sizeof(int *) * row);
+        gridP->grid[0] = (int *)malloc(sizeof(int) * col * row);
+        gridP->rows=row;
+        gridP->cols=col;
         gridP->border='!';
         gridP->wall='*';
         gridP->player='@';
@@ -63,6 +65,8 @@ static int init_grid(){
 }
 
 int destroy_grid(){
+        free(gridP->grid[0]);
+        free(gridP->grid );
         printf("size of gridP : %ld\n",sizeof(gridP));
         free(gridP);
         printf("size of gridP : %ld\n",sizeof(gridP));
@@ -72,15 +76,15 @@ int destroy_grid(){
 
 int build_grid(int row, int col){
         int i,j;
-        init_grid();
+        init_grid(row,col);
         double num=-1.0;
 
         
         //gridP->grid = malloc(row*sizeof(int*));
         //for(i=0;i<row;i++) gridP->grid[i] = malloc(col*sizeof(int));
-        for (i = 0 ; i < ROWS; i++){
+        for (i = 0 ; i < row; i++){
                 //gridP->grid[i][0]=1;
-                for (j=0; j< COLS; j++){
+                for (j=0; j< col; j++){
 
                         if (i == gridP->playerPos.y && j== gridP->playerPos.x)
                                 continue;
@@ -111,8 +115,8 @@ int build_grid(int row, int col){
 
 static int print_grid(struct yxGrid * grid){
         int i,j;
-        for (i = 0 ; i < ROWS; i++){
-                for (j=0; j< COLS; j++){
+        for (i = 0 ; i < grid->rows; i++){
+                for (j=0; j< grid->cols; j++){
                         if (gridP->grid[i][j] < 0)
                                 printf(" %c ",gridP->border);
                         else if (gridP->grid[i][j] == gridP->player)
