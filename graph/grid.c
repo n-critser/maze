@@ -15,6 +15,14 @@ int  is_free(int y,int x);
 static void start_game_message(void);
 static void instructions(void);
 
+
+
+
+/* only need one int ** grid for the maze
+ * 
+ *
+ *
+ */
 struct yxGrid {
         int rows;
         int cols;
@@ -33,7 +41,7 @@ struct yxGrid {
 
 
 
-static int init_grid(int row, int col){
+static int init_grid(int row, int col, int player , int goal,int wall, int border){
         //arr  = (int **)malloc(sizeof(int *) * r);
         //arr[0] = (int *)malloc(sizeof(int) * c * r);
         srand(time(NULL));
@@ -42,10 +50,10 @@ static int init_grid(int row, int col){
         gridP->grid[0] = (int *)malloc(sizeof(int) * col * row);
         gridP->rows=row;
         gridP->cols=col;
-        gridP->border='!';
-        gridP->wall='*';
-        gridP->player='@';
-        gridP->goal='#';
+        gridP->border=border;
+        gridP->wall=wall;
+        gridP->player=player;
+        gridP->goal=goal;
         
         int goalY,goalX;
         int playerY,playerX;
@@ -57,7 +65,7 @@ static int init_grid(int row, int col){
         playerX=(rand()%7)+2;
         gridP->playerPos.y=playerY;
         gridP->playerPos.x=playerX;
-        /* set player and goal positions */
+        /* set player and goal positions on the grid */
         gridP->grid[goalY][goalX]=gridP->goal;
         gridP->grid[playerY][playerX]=gridP->player;
         start_game_message();
@@ -74,9 +82,9 @@ int destroy_grid(){
 }
 
 
-int build_grid(int row, int col){
+int build_grid(int row, int col, int player , int goal, int wall , int border){
         int i,j;
-        init_grid(row,col);
+        init_grid(row,col,player,goal,wall,border);
         double num=-1.0;
 
         
