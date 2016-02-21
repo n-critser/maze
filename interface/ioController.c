@@ -54,8 +54,9 @@ int start_maze_game(struct mazeGameSetup *setup){
         struct yxGrid * grid = init_grid(rows,cols,player,goal,wall,border);
         build_grid(grid);
         show_grid(grid);
-        destroy_grid(grid);
-        //maze_play((setup->cols),(setup->rows));        
+        maze_play(grid);        
 
+        /*after all is done free memory */
+        destroy_grid(grid);
         return 0;
 }

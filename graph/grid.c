@@ -29,8 +29,8 @@ struct yxGrid {
         int dist_to_goal;
         char border;
         char wall;
-        char player;
-        char goal;
+        char pChar;
+        char gChar;
         struct pos{
                 int y;
                 int x;
@@ -42,20 +42,37 @@ void start_game_message(struct yxGrid *gridP);
 void instructions(void);
 
 
-struct yxGrid * init_grid(int row, int col, int player , int goal,int wall, int border){
+struct yxGrid * init_grid(int row, int col, int pChar , int gChar,int wall, int border){
         struct yxGrid *gridP;
-        assert(row > 0);
-        assert(col > 0);
-        srand(time(NULL));
         gridP=malloc(sizeof(struct yxGrid));
-        gridP->grid = (int **)malloc(sizeof(int *) * row);
-        gridP->grid[0] = (int *)malloc(sizeof(int) * col * row);
         gridP->rows=row;
         gridP->cols=col;
+        assert(row > 0);
+        assert(col > 0);
+        assert(gridP->rows > 0);
+        assert(gridP->cols > 0);
+
+        gridP->grid = (int **)malloc(sizeof(int *) * row);
+        gridP->grid[0] = (int *)malloc(sizeof(int) * col * row);
+        /* set pChar and gChar positions on the grid */
+        int i,j;
+        for(i = 0; i < gridP->rows; i++){
+                gridP->grid[i] = (*gridP->grid + gridP->cols * i);
+        }
+        
+        for (i = 0 ; i < gridP->rows; i++){
+                for (j=0; j< gridP->cols; j++){
+                        gridP->grid[i][j] = -1;
+                }
+        }
+
+        
+        srand(time(NULL));
+        
         gridP->border=border;
         gridP->wall=wall;
-        gridP->player=player;
-        gridP->goal=goal;
+        gridP->pChar=pChar;
+        gridP->gChar=gChar;
         
         int goalY,goalX;
         int playerY,playerX;
@@ -68,19 +85,8 @@ struct yxGrid * init_grid(int row, int col, int player , int goal,int wall, int 
         gridP->playerPos.y=playerY;
         gridP->playerPos.x=playerX;
         
-        /* set player and goal positions on the grid */
-        int i,j;
-        for(i = 0; i < gridP->rows; i++){
-                gridP->grid[i] = (*gridP->grid + gridP->cols * i);
-        }
-        
-        for (i = 0 ; i < gridP->rows; i++){
-                for (j=0; j< gridP->cols; j++){
-                        gridP->grid[i][j] = -1;
-                }
-        }
-        gridP->grid[goalY][goalX]=gridP->goal;
-        gridP->grid[playerY][playerX]=gridP->player;
+        gridP->grid[goalY][goalX]=gridP->gChar;
+        gridP->grid[playerY][playerX]=gridP->pChar;
         start_game_message(gridP);
         return gridP;
 
@@ -97,7 +103,7 @@ int destroy_grid(struct yxGrid *gridP){
 
 
 int build_grid(struct yxGrid *gridP ){
-        //int row, int col, int player , int goal, int wall , int border;
+        //int row, int col, int pChar , int gChar, int wall , int border;
         int i,j;
         double num=-1.0;
         for (i = 0 ; i < gridP->rows; i++){
@@ -131,10 +137,10 @@ static int print_grid(struct yxGrid * gridP){
                 for (j=0; j< gridP->cols; j++){
                         if (gridP->grid[i][j] < 0)
                                 printf(" %c ",gridP->border);
-                        else if (gridP->grid[i][j] == gridP->player)
-                                printf(" %c ",gridP->player);
-                        else if (gridP->grid[i][j] == gridP->goal)
-                                printf(" %c ",gridP->goal);
+                        else if (gridP->grid[i][j] == gridP->pChar)
+                                printf(" %c ",gridP->pChar);
+                        else if (gridP->grid[i][j] == gridP->gChar)
+                                printf(" %c ",gridP->gChar);
                         else
                                 printf(" %d ",gridP->grid[i][j]);
                 }
@@ -152,8 +158,8 @@ int  is_free(struct yxGrid *gridP){
         return 0;//gridP->grid[gridP.current.x][current.y];
 }
 
-int play(char * player){
-        printf("now starting game: Player = %s" , player);
+int play(char * pChar){
+        printf("now starting game: PChar = %s" , pChar);
         int choice;
 
         instructions();
@@ -184,10 +190,10 @@ int play(char * player){
 
 void start_game_message(struct yxGrid * gridP){
         printf("Characters for the game\n"
-               "player = %c\n"
-               "goal   = %c\n"
+               "pChar = %c\n"
+               "gChar   = %c\n"
                "wall   = %c\n"
-               "border = %c\n", gridP->player,gridP->goal,gridP->wall,gridP->border);
+               "border = %c\n", gridP->pChar,gridP->gChar,gridP->wall,gridP->border);
         printf ("Positions: \n"
                 "player y= %d,x= %d\n"
                 "goal   y= %d,x= %d\n",

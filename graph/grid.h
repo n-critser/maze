@@ -9,8 +9,8 @@ struct yxGrid {
         int dist_to_goal;
         char border;
         char wall;
-        char player;
-        char goal;
+        char pChar;
+        char gChar;
         struct pos{
                 int y;
                 int x;

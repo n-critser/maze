@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <time.h>
 #include <signal.h>
+#include <assert.h>
 #include "../graph/grid.h"
 #include "../constants/constants.h"
 /*
@@ -61,7 +62,10 @@ int set_maze_ioconf(){
         return 0;
 }
 
-int maze_game_init(struct maze_face *face, int width,int height){
+int maze_game_init(struct maze_face *face,struct yxGrid *maze ){
+        int width,height;
+        width=maze->cols;
+        height=maze->rows;
         int x,y;
         /* only the face output should be set/manipulated here
          * other values should move to ioController and be taken as params to
@@ -69,8 +73,13 @@ int maze_game_init(struct maze_face *face, int width,int height){
 
          */
         face->win=0;
-        face->pChar='@';
-        face->gChar='#';
+        face->pChar=maze->pChar;
+        face->gChar=maze->gChar;
+        // point face->player to maze->playerPos
+        // this will save in allocating memory and always keep the 2 in sync
+        // maybe make them const pointers to keep from having side effects
+        // whole yxGrid should be const for that matter
+        // 
         face->player=malloc(sizeof(struct vertex));
         face->goal=malloc(sizeof(struct vertex));
         face->width=width;
@@ -193,12 +202,18 @@ int maze_quit(struct maze_face * face){
         return 0;
 }
 
-int maze_play(int width, int height){
+int maze_play(struct yxGrid * maze){
+
+        int width,height;
+        width= maze->cols;
+        height= maze->rows;
+        assert(width > 0);
+        assert(height > 0);
         struct maze_face face;
         char cmd;
         enum DIRECTION move;
         set_maze_ioconf();
-        maze_game_init(&face,width,height);
+        maze_game_init(&face,maze);
         maze_show_face(&face);
         while( face.win >= 0){
                 while((cmd=getchar())>0){
