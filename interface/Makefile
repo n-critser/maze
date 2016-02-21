@@ -2,7 +2,7 @@ EXE=Maze
 OBJECTS=main.o ../graph/grid.o mazeFace.o ioController.o
 CURSES_MAZE=curses_maze.o
 CC=gcc 
-FLAGS=-I./ -O3 -lrt -Wall -lncurses
+FLAGS=-I./ -O0 -lrt -Wall -lncurses -g
 CURSOR=curse
 
 
@@ -17,3 +17,6 @@ $(CURSOR): $(CURSES_MAZE)
 	$(CC) $(FLAGS) -c $< -o $@
 
 all: $(EXE) $(CURSOR)
+
+clean:
+	rm $(OBJECTS) $(EXE)

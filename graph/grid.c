@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
-#include "maze.h"
+#include<assert.h>
 #include "queue.h"
 #define log(expr) printf(#expr " %s\n", expr)
 
@@ -11,9 +11,6 @@
    
  */
 
-int  is_free(int y,int x);
-static void start_game_message(void);
-static void instructions(void);
 
 
 
@@ -23,6 +20,7 @@ static void instructions(void);
  *
  *
  */
+/*
 struct yxGrid {
         int rows;
         int cols;
@@ -37,13 +35,17 @@ struct yxGrid {
                 int y;
                 int x;
         }current,goalPos,playerPos;
-} *gridP;
+} ;
+*/
+int  is_free(struct yxGrid *gridP);
+void start_game_message(struct yxGrid *gridP);
+void instructions(void);
 
 
-
-static int init_grid(int row, int col, int player , int goal,int wall, int border){
-        //arr  = (int **)malloc(sizeof(int *) * r);
-        //arr[0] = (int *)malloc(sizeof(int) * c * r);
+struct yxGrid * init_grid(int row, int col, int player , int goal,int wall, int border){
+        struct yxGrid *gridP;
+        assert(row > 0);
+        assert(col > 0);
         srand(time(NULL));
         gridP=malloc(sizeof(struct yxGrid));
         gridP->grid = (int **)malloc(sizeof(int *) * row);
@@ -65,14 +67,26 @@ static int init_grid(int row, int col, int player , int goal,int wall, int borde
         playerX=(rand()%7)+2;
         gridP->playerPos.y=playerY;
         gridP->playerPos.x=playerX;
+        
         /* set player and goal positions on the grid */
+        int i,j;
+        for(i = 0; i < gridP->rows; i++){
+                gridP->grid[i] = (*gridP->grid + gridP->cols * i);
+        }
+        
+        for (i = 0 ; i < gridP->rows; i++){
+                for (j=0; j< gridP->cols; j++){
+                        gridP->grid[i][j] = -1;
+                }
+        }
         gridP->grid[goalY][goalX]=gridP->goal;
         gridP->grid[playerY][playerX]=gridP->player;
-        start_game_message();
-        return sizeof(gridP);
+        start_game_message(gridP);
+        return gridP;
+
 }
 
-int destroy_grid(){
+int destroy_grid(struct yxGrid *gridP){
         free(gridP->grid[0]);
         free(gridP->grid );
         printf("size of gridP : %ld\n",sizeof(gridP));
@@ -82,49 +96,39 @@ int destroy_grid(){
 }
 
 
-int build_grid(int row, int col, int player , int goal, int wall , int border){
+int build_grid(struct yxGrid *gridP ){
+        //int row, int col, int player , int goal, int wall , int border;
         int i,j;
-        init_grid(row,col,player,goal,wall,border);
         double num=-1.0;
-
-        
-        //gridP->grid = malloc(row*sizeof(int*));
-        //for(i=0;i<row;i++) gridP->grid[i] = malloc(col*sizeof(int));
-        for (i = 0 ; i < row; i++){
-                //gridP->grid[i][0]=1;
-                for (j=0; j< col; j++){
+        for (i = 0 ; i < gridP->rows; i++){
+                for (j=0; j< gridP->cols; j++){
 
                         if (i == gridP->playerPos.y && j== gridP->playerPos.x)
                                 continue;
                         else if (i == gridP->goalPos.y && j== gridP->goalPos.x){
                                 continue;
                         }
-                        /* Removed the border for now till the maze builder works
-                          else if (i == 0 || j==0 || j== COLS-1 || i== ROWS-1)
-                                num = -1;
-                        */
+                        // Removed the border for now till the maze builder works
+                        //  else if (i == 0 || j==0 || j== COLS-1 || i== ROWS-1)
+                        //        num = -1;
+
                                 
                         else {
-                                /* num = (rand()%9);  */
                                 num = (rand()%2);
                         }
                         gridP->grid[i][j]=num;
                         gridP->current.y=i;
                         gridP->current.x=j;
-                        //printf(" %d ",gridP->grid[i][j]);
-                        //is_free(i,j);
                 }
-
-
-                //printf("\n");
         }
+
         return 0;
 }
 
-static int print_grid(struct yxGrid * grid){
+static int print_grid(struct yxGrid * gridP){
         int i,j;
-        for (i = 0 ; i < grid->rows; i++){
-                for (j=0; j< grid->cols; j++){
+        for (i = 0 ; i < gridP->rows; i++){
+                for (j=0; j< gridP->cols; j++){
                         if (gridP->grid[i][j] < 0)
                                 printf(" %c ",gridP->border);
                         else if (gridP->grid[i][j] == gridP->player)
@@ -139,13 +143,13 @@ static int print_grid(struct yxGrid * grid){
         return 0;
 }
 
-void show_grid(){
+void show_grid(struct yxGrid * gridP){
         print_grid(gridP);
 }
 
-int  is_free(int y,int x){
-        printf ("gridP->current.y= %d gridP->current.x=%d ",gridP->current.y,gridP->current.x);
-        return gridP->grid[x][y];
+int  is_free(struct yxGrid *gridP){
+        //printf ("gridP->current.y= %d gridP->current.x=%d ",gridP->current.y,gridP->current.x);
+        return 0;//gridP->grid[gridP.current.x][current.y];
 }
 
 int play(char * player){
@@ -178,7 +182,7 @@ int play(char * player){
         return 0;
 }
 
-static void start_game_message(void){
+void start_game_message(struct yxGrid * gridP){
         printf("Characters for the game\n"
                "player = %c\n"
                "goal   = %c\n"
@@ -195,7 +199,7 @@ static void start_game_message(void){
 }
 
 
-static void instructions(void){
+void instructions(void){
         printf("Enter integers for player movement\n"
                " 8 = up\n"
                " 2 = down\n"

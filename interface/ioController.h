@@ -1,7 +1,6 @@
 #ifndef IOCONTROLLER_H_
 #define IOCONTROLLER_H_
 
-int start_maze_game(int rows, int cols);
 
 struct mazeGameSetup{
         int rows;
@@ -11,5 +10,7 @@ struct mazeGameSetup{
         int player;
         int goal;
 };
+
+int start_maze_game(struct mazeGameSetup *);
 
 #endif

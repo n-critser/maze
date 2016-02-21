@@ -8,7 +8,18 @@
 
 //struct mazeGameSetup * gameSetup;
 
-int start_maze_game(int rows, int cols){
+int print_setup(struct mazeGameSetup *setup){
+        printf ( "setup->border char: %c\n",setup->border);
+        printf ( "setup->wall char: %c\n",setup->wall);
+        printf ( "setup->player char: %c\n",setup->player);
+        printf ( "setup->goal char: %c\n",setup->goal);
+        printf ( "setup->rows int: %d\n",setup->rows);
+        printf ( "setup->cols int: %d\n",setup->cols);
+        printf ("THATS IT FOR GAME SETUP\n");
+        return 0;
+}
+
+int start_maze_game(struct mazeGameSetup *setup){
 
         /**maze_play should be moved to ioContoller
          * mazeFace : maze_game_init should be moved partially to ioController
@@ -19,7 +30,8 @@ int start_maze_game(int rows, int cols){
          * use maze to update face
          * should ioController be located in different directory (maybe mux) 
          */
-        maze_play(cols,rows);
+        print_setup(setup);
+
 
         /* how does the face and the grid coincide?
          * 1. should build grid first. 
@@ -30,21 +42,20 @@ int start_maze_game(int rows, int cols){
          * 6. update face
          * 7. get next input 
          */
-        struct mazeGameSetup *gameSetup=malloc(sizeof(struct mazeGameSetup));
-        gameSetup->border='!';
-        gameSetup->wall='*';
-        gameSetup->player='@';
-        gameSetup->goal='#';
-        gameSetup->rows=rows;
-        gameSetup->cols=cols;
-        int border='!';
-        int wall='*';
-        int player='@';
-        int goal='#';
-        build_grid(rows,cols,player,goal,wall,border);
-        show_grid();
-        destroy_grid();
-        free(gameSetup);
+        // setup->rows,setup->cols,setup->player,setup->goal,setup->wall,setup->border
+        int rows,cols,player,goal,wall,border;
+        rows=setup->rows;
+        cols=setup->cols;
+        player=setup->player;
+        goal=setup->goal;
+        wall=setup->wall;
+        border=setup->border;
+        /*Segfaulting  */
+        struct yxGrid * grid = init_grid(rows,cols,player,goal,wall,border);
+        build_grid(grid);
+        show_grid(grid);
+        destroy_grid(grid);
+        //maze_play((setup->cols),(setup->rows));        
 
         return 0;
 }
