@@ -42,7 +42,8 @@ int start_maze_game(struct mazeGameSetup *setup){
          * 6. update face
          * 7. get next input 
          */
-        // setup->rows,setup->cols,setup->player,setup->goal,setup->wall,setup->border
+        //      setup->rows,setup->cols,setup->player,setup->goal,setup->wall,setup->border
+        // TODO: Remove these vars & assert on params
         int rows,cols,player,goal,wall,border;
         rows=setup->rows;
         cols=setup->cols;
@@ -50,10 +51,29 @@ int start_maze_game(struct mazeGameSetup *setup){
         goal=setup->goal;
         wall=setup->wall;
         border=setup->border;
-        /*Segfaulting  */
+        /* TODO:
+           1. move play logic into ioController
+           2.  update face with grid
+           3. 
+         */
         struct yxGrid * grid = init_grid(rows,cols,player,goal,wall,border);
+        /* TODO:
+           1. ADD mazeBuilder to graph package
+           2. check for memory leaks
+         */
         build_grid(grid);
+        /* TODO:
+           1. ADD MOVE list to yxGrid
+           2. move show_grid to mazeFace
+         */
         show_grid(grid);
+
+        /* TODO:
+           1. whats the minimum mazeFace needs  chars and int **
+           2. score and level ... should move to game_setup
+           3. update score and level inside grid.c ? or ioController
+           4. ? gameState { score,level,moveString,...} agentState? 
+         */
         maze_play(grid);        
 
         /*after all is done free memory */
