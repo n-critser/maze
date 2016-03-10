@@ -2,123 +2,65 @@
 #import prettyprint
 import json
 import pprint
-height = 5
-width = 5
+import random
+import graph as gh
 
-maze = []
+# classes necessary representing a graph
+# vertex, edge , graph
+"""
+maze requirements
+1. graph
+2. dimensions to determine potential moves
+3. Graph(int vertices, int dimesion ) :
+    # of vertices can be anything
+    dimension is the dimension square of the maze
+4. what happens if the dimension and vertices don't divide evenly ?
+    maze will add vertices to create a complete graph for the whole maze
+5. based on (vertices,dim) maze will be constructed by
+   making edges between vertices that are LEGAL.
+6. the resulting maze will be saved to a file named by its graph information
+   - degree , vertices, edges, edge list, +++
+7. 
 
-class Vertex:
-    def __init__(self,row,col):
-        self.y=row
-        self.x=col
-        self.tup=(row,col)
-        self.color=None
-        self.neighbors=[]
-        self.connections=[]
-    def __str__(self):
-        return "(%d,%d)-color=%s" % (self.y,self.x,self.color)
+"""
+moves=("north","east","south","west")
+print moves
+print moves[1]
+def maze_check_legal_move(graph,source,sink):
 
-    def getNeighbors(self):
-        return self.neighbors
-
-    def getConnections(self):
-        return self.connections
-# maze is a 2d array
-# adj matrix for maze = (h x w)^2 boolean matrix
-# or (h x w)^2 vertex lists for the adjList
-
-# build the maze one cell at a time
-# start at random position
-# red chooses a cell for a path
-# black chooses a cell for a wall
-# if start = (0,0) frontier = [(0,1),(1,0)]
-# each vertex gets a color (red or black)
-# frontier =includes all immediately avaialble vertices
-# openList = all uncolored vertices
-def createOpenList(  rows, cols,oList=[]):
-    for i in range(0,rows):
-        for j in range(0,cols):
-            oList.append( Vertex(i,j))
-    return oList
-
-# all vertices in maze (x,y) become vertices with a color
-# and lists of neighbors and connections
-openList=createOpenList(width,height)
-#print openList
-print len(openList)
-# graph = V(verticies) & E(edges)
-# graph = { (0,0):[(0,1),(1,0)]
-def getVertexByTuple(vList,tup):
-    for v in vList:
-        if v.tup == tup:
-            return v
-    return None
-def mazeInit(vList):
-    neighborDict = {}
-
-    for e in openList:
-        #  row wise extremes
-        upper = e.tup[0] -1
-        lower = e.tup[0] +1
-        left  = e.tup[1] -1
-        right = e.tup[1] +1
-        # this has to be changed to append only references to the Vertex already in the list
-        if (upper >= 0 ):
-            e.neighbors.append(getVertexByTuple(vList,(upper,e.tup[1])))
-        if (lower < height):
-            e.neighbors.append(getVertexByTuple(vList,(lower,e.tup[1])))
-        if (left >= 0):
-            e.neighbors.append(getVertexByTuple(vList,(e.tup[0],left)))
-        if (right < width):
-            e.neighbors.append(getVertexByTuple(vList,(e.tup[0],right)))
-        neighborDict[e.tup]=e.neighbors
-        #print e, e.neighbors
-    #print e,":", neighbors
-    return neighborDict
-
-def printMaze(vList):
-    for v in vList:
-        print v, v.connections
-
-def addRedVertex(vertex):
-    vertex.color="red"
-
-def addBlackVertex(vertex):
-    vertex.color="black"
+    if source == 0 or  source ==graph.n-(graph.dim-1):
+        print "found a left corner"
+    elif source == graph.dim -1 or source ==graph.n:
+        print "found a right corner"
+    # elif top row
+    # elif bottom row
+    # elif left column
+    # elif right column
+    # else out of bounds ?
         
-def buildMaze(openVertexList,mazeBuildDict):
-    counter=1
-    start = openVertexList[0]
-    start.color="red"
-    # the final vertex list with connections and neighbors
-    mazeList=[]
-    # frontier of available vertices to be chosen from
-    # initially will be neighbors of starting vertex
-    # frontier=[]
-    frontier = start.neighbors
-    # as the frontier changes the list of openVertices should also change
-    while  (len(frontier) > 0):
-        v = frontier.pop()
-        print v
-        if v in openVertexList:
-            print "index of v in openVertexList: ",openVertexList.index(v)
-        #mazeList.append(openVertexList.remove(v))
-        # black case
-        if counter %2 == 0:
-            v.color="black"
-        else:
-            v.color="red"
-            #v.connections.append(v.neighbors.pop())
-        counter+=1
-        print "vertex:",v
-        
-        #
-    return mazeList
-    
-mazeDict = mazeInit(openList)
-pp = pprint.PrettyPrinter(indent=4)
-#pp.pprint(mazeDict)
-printMaze(openList)
+    return True
 
-builtMaze=buildMaze(openList,mazeDict)
-printMaze(builtMaze)
+def maze_add_edge(graph,source,sink):
+    if (maze_check_legal_move(graph,source,sink)):
+        graph.graph_add_edge(source,sink)
+    print "source: %d , sink: %d"%(source,sink)
+    print graph.graph_return_stats()
+    return 0
+def maze_init(vertices,dimension):
+    """initialize a maze  """
+    mGraph=gh.Graph(vertices,dimension)
+    # create legal move list
+    # create
+    print mGraph.graph_return_stats()    
+    return mGraph
+
+graph = maze_init(32,8)
+
+maze_add_edge(graph,1,2)
+maze_add_edge(graph,0,1)
+maze_add_edge(graph,2,3)
+maze_add_edge(graph,3,6)
+maze_add_edge(graph,6,9)
+graph.graph_add_edge(9,11)
+print graph
+print graph.graph_show_graph()
