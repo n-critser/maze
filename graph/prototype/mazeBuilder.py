@@ -32,8 +32,22 @@ def maze_check_legal_move(graph,source,sink):
         print "found a left corner"
     elif source == graph.dim -1 or source ==graph.n:
         print "found a right corner"
-    # elif top row
-    # elif bottom row
+    #top row not a corner
+    elif source / graph.dim == 0:
+        print "****top row not a corner"
+    #bottom row not a corner
+    elif (source/graph.dim) == (graph.n-1)/graph.dim:
+        print "****not a corner botton row"
+        print "(source/graph.dim)",(source/graph.dim)
+        print "graphn-1/grpha.dim:",(graph.n-1)/graph.dim
+
+    elif (source % graph.dim) == 0:
+        print "left column"
+
+    elif (source % graph.dim) ==graph.dim-1:
+        print "right column"
+    print "divide",source/graph.dim
+    print "mod",source%graph.dim
     # elif left column
     # elif right column
     # else out of bounds ?
@@ -61,6 +75,9 @@ maze_add_edge(graph,0,1)
 maze_add_edge(graph,2,3)
 maze_add_edge(graph,3,6)
 maze_add_edge(graph,6,9)
-graph.graph_add_edge(9,11)
+maze_add_edge(graph,8,9)
+maze_add_edge(graph,15,14)
+maze_add_edge(graph,30,31)
+maze_add_edge(graph,26,18)
 print graph
 print graph.graph_show_graph()
