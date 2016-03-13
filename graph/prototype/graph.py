@@ -77,11 +77,14 @@ class Graph:
         string+=( "*"* self.dim)
         string+=( "\n")
         for i in range(0,self.n):
-            j = i+1
-            if (j < self.n ) and (self.graph_has_edge(i,j)):
-                string += "@"
-            else:
-                #print "i: %d i+1: %d"% (i,i+1)
+            found=False
+            for j in range(1,self.n):
+                if (j < self.n ) and (self.graph_has_edge(i,j)):
+                    string += "@"
+                    found=True
+                    print "%d is a connected node"%i
+                    break
+            if not found:
                 string += "-"
             if count %self.dim ==0:
                 string +="\n"
