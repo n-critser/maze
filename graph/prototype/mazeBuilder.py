@@ -5,8 +5,8 @@ import pprint
 import random
 import graph as gh
 
-# classes necessary representing a graph
-# vertex, edge , graph
+# classes necessary representing a maze
+#  graph, search, maze 
 """
 maze requirements
 1. graph
@@ -108,9 +108,23 @@ def maze_add_edge(graph,source,sink):
     print graph.graph_return_stats()
     return False
 
+# global vars to be moved into class
+is_wall=[]
+wallCount=-1
 def maze_init(vertices,dimension):
     """initialize a maze  """
     mGraph=gh.Graph(vertices,dimension)
+    n = mGraph.n/mGraph.dim
+    m = mGraph.dim
+    print "n: %d , m: %d"%(n,m)
+
+    wallCount=(2*m*n)-m-n
+    mGraph.wallCount=wallCount
+    
+    for r in range(0,wallCount): #(2*m*n-m-n)
+        is_wall.append(True)
+    mGraph.is_wall=is_wall
+    print "mGraph.is_wall:",mGraph.is_wall
     return mGraph
 
 
@@ -137,10 +151,6 @@ def maze_build_path(graph,source,sink,searchMethod):
 def maze_print(graph):
     n = graph.n/graph.dim
     m = graph.dim
-    print "n: %d , m: %d"%(n,m)
-    is_wall=[]
-    for r in range(0,(2*m*n-m-n)):
-        is_wall.append(True)
     topString=""
 
     print "+  +",
