@@ -97,12 +97,16 @@ def maze_add_edge(graph,source,sink):
     after testing if move is legal"""
     if (maze_check_legal_move(graph,source,sink)):
         # directed graph add only single edge
+        theWall= maze_find_wall_between_vertices(graph,source,sink)
+        graph.is_wall[theWall]=False
         graph.graph_add_edge(source,sink)
         # undirected graph add reverse edge 
         graph.graph_add_edge(sink,source)
+        maze_print(graph)
         return True
+    
     print "source: %d , sink: %d"%(source,sink)
-    print graph.graph_return_stats()
+    #print graph.graph_return_stats()
     return False
 
 # global vars to be moved into class
@@ -245,18 +249,34 @@ def maze_find_wall_between_vertices(graph,source,sink):
     assert (sink >= 0 )
     assert (sink < graph.n)
     wall = -1
+    moveDir=maze_find_move_direction(graph,source,sink)
     moveList=maze_init_legal_move_list(graph,source)
     direction=maze_find_move_direction(graph,source,sink)
+    sourceRow=source/graph.dim
+    sourceCol=source%graph.dim
     # make a list of available walls corresponding to adjacent nodes
-    wallList=maze_init_wall_list(graph,source)
+    wallList=[-1,-1,-1,-1]
+    # NORTHWALL goes negative if the source node is on the top row
+    # this goes after the legal move test , so northwall negative doesn't matter now
+    northWall=(((source/graph.dim)*(graph.dim-1)+((source/graph.dim)-1)*graph.dim)+ source%graph.dim)
+    wallList[0]=northWall
+    rightWall=northWall+graph.dim
+    wallList[1]=rightWall
+    leftWall=northWall+graph.dim-1
+    wallList[2]=leftWall
+    bottomWall=rightWall+graph.dim-1
+    wallList[3]=bottomWall
+    print "wallList:",wallList
+    print "source:%d , northWall:%d , sourceRow:%d , sourceCol:%d "%(source, northWall,sourceRow,sourceCol)
     print "moveList:",moveList
     print "source-sink: %d "% (source-sink)
     print "wallCount mod graph.dim: %d  " %(graph.wallCount % graph.dim)
-    print "wallCount / source: %d" %(graph.wallCount / source)
-    print "wallCount mod  source: %d" %(graph.wallCount % source)
+    print "\n\n"
+    #print "wallCount / source: %d" %(graph.wallCount / source)
+    #print "wallCount mod  source: %d" %(graph.wallCount % source)
     littleNode=min(source,sink)
     
-    return littleNode  #  
+    return wallList[moveDir]#northWall#littleNode  #  
 """
 wallCount = 2*m*n-m-n
 m : 8 , n : 4
@@ -315,28 +335,42 @@ wallCount: 52
 from source to sink
 
 if direction is east or west wall will be
-if source = 8 vertical walls start at 15 ( 8*2-1) 
+if source = 8 vertical walls start at 15 ( 8*2-1)=
+A nodes north wall =  (((node/graph.dim)*(graph.dim-1)+((node/graph.dim)-1)*graph.dim)+ node%graph.dim) = 
+if source = 16 horizontal wall at ((2*(7)+(2-1)*8)+ 0) =14+8=22
 """
     
 #################################################
 ## testing 
-graph = maze_init(32,8)
-
+#graph = maze_init(32,8)
+graph = maze_init(16,4)
 maze_add_edge(graph,1,2)
+
 maze_add_edge(graph,0,1)
 maze_add_edge(graph,2,3)
 maze_add_edge(graph,3,11)
 maze_add_edge(graph,7,6)
 maze_add_edge(graph,15,14)
-maze_add_edge(graph,10,18)
-maze_add_edge(graph,30,31)
-maze_add_edge(graph,26,18)
+#maze_add_edge(graph,10,18)
+#maze_add_edge(graph,30,31)
+#maze_add_edge(graph,26,18)
 #print graph
 #print graph.graph_show_graph()
-for k in range(0,graph.dim):
-    graph.is_wall[k]=False
+#for k in range(0,graph.dim):
+#    graph.is_wall[k]=False
+"""
+theWall= maze_find_wall_between_vertices(graph,13,14)
+graph.is_wall[theWall]=False
 print graph.is_wall
 maze_print(graph)
-theWall= maze_find_wall_between_vertices(graph,30,31)
-print "wall: %d"%theWall 
-print "wallCount:",graph.wallCount 
+theWall= maze_find_wall_between_vertices(graph,2,3)
+graph.is_wall[theWall]=False
+print graph.is_wall
+maze_print(graph)
+theWall= maze_find_wall_between_vertices(graph,0,1)
+graph.is_wall[theWall]=False
+print graph.is_wall
+maze_print(graph)
+"""
+#print "wall: %d"%theWall 
+#print "wallCount:",graph.wallCount 
