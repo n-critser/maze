@@ -1,0 +1,17 @@
+
+Kruskals:
+    """using maze functions and graph class create a maze using
+    kurskals algorithm:
+    from : Algorithmic graph theory : 
+    Input A connected weighted graph G = (V, E) with weight function w.
+    Output A minimum spanning tree of G.
+    1: m ← |V |
+    2: T ← ∅
+    3: sort E = {e 1 , e 2 , . . . , e n } by weights so that w(e 1 ) ≤ w(w 2 ) ≤ · · · ≤ w(e n )
+    4: for i ← 1, 2, . . . , n do
+    5:     if e i ~∈  E(T ) and T ∪ {e i } is acyclic then
+    6:        T ← T ∪ {e i }
+    7:     if |T | = m − 1 then
+    8:        return T
+
+    """

@@ -91,6 +91,20 @@ def maze_check_legal_move(graph,source,sink):
         print "move is *NOT* legal"
         return False
 
+def maze_connect_graph(graph):
+    """connect all vertices in graph using each edge """
+    edgeLists=[]
+    for vertex in range(graph.n):
+        print "vertex:%d"%vertex
+        moveList=maze_init_legal_move_list(graph,vertex)
+        print "moveList:",moveList
+        for move in moveList:
+            if move  > 0:
+                maze_add_edge(graph,vertex,move)
+        edgeLists.append(graph.graph_edge_list(vertex))
+    print "vertex edge lists:",edgeLists
+    return #graph.edges
+        
     
 def maze_add_edge(graph,source,sink):
     """adds edge from source to sink
@@ -110,9 +124,10 @@ def maze_add_edge(graph,source,sink):
     return False
 
 # global vars to be moved into class
-is_wall=[]
-wallCount=-1
+
 def maze_init(vertices,dimension):
+    is_wall=[]
+    wallCount=-1
     """initialize a maze  """
     mGraph=gh.Graph(vertices,dimension)
     n = mGraph.dim
@@ -267,15 +282,7 @@ def maze_find_wall_between_vertices(graph,source,sink):
     bottomWall=rightWall+graph.dim-1
     wallList[3]=bottomWall
     print "wallList:",wallList
-    print "source:%d , northWall:%d , sourceRow:%d , sourceCol:%d "%(source, northWall,sourceRow,sourceCol)
-    print "moveList:",moveList
-    print "source-sink: %d "% (source-sink)
-    print "wallCount mod graph.dim: %d  " %(graph.wallCount % graph.dim)
-    print "\n\n"
-    #print "wallCount / source: %d" %(graph.wallCount / source)
-    #print "wallCount mod  source: %d" %(graph.wallCount % source)
-    littleNode=min(source,sink)
-    
+    print "source:%d , sink:%d, sourceRow:%d , sourceCol:%d "%(source, sink, sourceRow,sourceCol), "\nmoveList:",moveList , "\nWall:%d"%(wallList[moveDir])
     return wallList[moveDir]#northWall#littleNode  #  
 """
 wallCount = 2*m*n-m-n
@@ -374,3 +381,50 @@ maze_print(graph)
 """
 #print "wall: %d"%theWall 
 #print "wallCount:",graph.wallCount 
+
+
+# kruskals algorithm :
+
+class edge:
+    def __init__(self,u,v,wall):
+        self.u=u
+        self.v=v
+        self.wall=wall
+        self.cost=999999
+
+    def set_cost(self,cost):
+        assert cost>0
+        self.cost=cost
+
+        
+
+def kruskal(size, dim):
+    """using maze functions and graph class create a maze using
+    kurskals algorithm:
+    from : Algorithmic graph theory : 
+    Input A connected weighted graph G = (V, E) with weight function w.
+    Output A minimum spanning tree of G.
+    """
+    # size = m
+    # T = graph we are building from the connected , weighted graph
+    # how to test if acyclic ? need some way to search the graph 
+    #
+    T = maze_init(size,dim)
+    G = maze_init(size,dim)
+    nodeList=[0 for x in range(size)]
+    nodeList[0]=1
+    edgeList=[]
+    print "nodeList:",nodeList, "\nlength:",len(nodeList)
+    maze_connect_graph(G)
+    maze_print(G)
+    for vertex in range(G.n):
+        if nodeList[vertex]:
+            print "already in"
+        else:
+            print "adding: vertex %d"%vertex
+            nodeList[vertex]=1
+    print nodeList
+    root = 0 # always start root at node 0 for now
+    dist=0 # distance from root
+
+kruskal(16,4)

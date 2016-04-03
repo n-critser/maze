@@ -56,7 +56,11 @@ class Graph:
         else:
             return False
     #def graphCreate(n):
-
+    def graph_edge_list(self,source):
+        assert source>=0
+        assert source< self.n
+        return self.aList[source].sList
+    
     def graph_add_edge(self,u,v):
         assert u >=0
         assert u < self.n
