@@ -28,16 +28,15 @@ struct graph {
 
 
 /* create a new graph with n vertices labeled 0..n-1 and no edges */
-/* create a new graph with n vertices labeled 0..n-1 and no edges */
 Graph
 graph_create(int n)
 {
     Graph g;
     int i;
-
+    /* allocate memory for a graph and n successors (is this edges)  */
     g = malloc(sizeof(struct graph) + sizeof(struct successors *) * (n-1));
     assert(g);
-
+    
     g->n = n;
     g->m = 0;
 
