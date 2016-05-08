@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include "graph.h"
-#include "search.h"
+#include "mazeSearch.h"
 
 /* create an array of n ints initialized to SEARCH_INFO_NULL */
 static int *
@@ -148,4 +148,26 @@ void
 bfs(struct search_info *results, int root)
 {
     generic_search(results, root, 1);
+}
+
+int isConnected(struct search_info *results){
+        generic_search(results,0,0);
+        int edgeCount;
+        int edgeValidation;
+        int sizeOfPreOrder;
+        int i;
+        int nullParent;
+        nullParent=1;
+        for (i=0 ; i < graph_vertex_count(results->graph);i++){
+                if (results->parent[i]==SEARCH_INFO_NULL){
+                        nullParent=0;
+                        break;
+                }
+        }
+        edgeCount=graph_edge_count(results->graph) ;
+        
+        edgeValidation=(edgeCount>=graph_vertex_count(results->graph)) ? 1 : 0;
+        sizeOfPreOrder=(sizeof(results->preorder)/sizeof(int));
+        printf ("sizeOfPreOrder:%d",sizeOfPreOrder);
+        return nullParent && edgeValidation;
 }

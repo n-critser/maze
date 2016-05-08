@@ -71,7 +71,7 @@ graph_add_edge(Graph g, int u, int v)
     assert(v >= 0);
     assert(v < g->n);
 
-    printf("adding edge u:%d, v:%d\n",u,v);
+    //printf("adding edge u:%d, v:%d\n",u,v);
     /* do we need to grow the list? */
     while(g->alist[u]->d >= g->alist[u]->len) {
         g->alist[u]->len *= 2;
