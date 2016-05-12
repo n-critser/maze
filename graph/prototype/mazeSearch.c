@@ -3,6 +3,11 @@
 #include <stdio.h>
 #include "graph.h"
 #include "mazeSearch.h"
+/*srand for now*/
+#include <time.h>
+
+
+
 
 /* create an array of n ints initialized to SEARCH_INFO_NULL */
 static int *
@@ -21,6 +26,31 @@ create_empty_array(int n)
     return a;
 }
 
+/* used inside search routines */
+struct edge {
+        int u;          /* source */
+        int v;          /* sink */
+        int w;          /* weight */
+};
+
+/*create a heap of edges for now can be a sorted array of edges */
+struct heap {
+        struct edge *e;
+        int partition;
+        int min;
+};
+
+/* FIXME: add asserts and  unit test heap */
+/* FIXME: add heapInsert , percolateDown, and getMin for heap*/
+struct heap * initEdgeHeap(Graph g){
+        struct heap * eH;
+        eH = malloc(sizeof(*eH));
+        eH->e = malloc(sizeof(*eH->e) * (graph_edge_count(g) + 1));
+        assert(eH);
+        return eH;
+};
+        
+
 /* allocate and initialize search results structure */
 /* you need to do this before passing it to dfs or bfs */
 struct search_info *
@@ -28,7 +58,7 @@ search_info_create(Graph g)
 {
     struct search_info *s;
     int n;
-
+    srand(time(NULL));
     s = malloc(sizeof(*s));
     assert(s);
 
@@ -41,7 +71,7 @@ search_info_create(Graph g)
     s->time = create_empty_array(n);
     s->parent = create_empty_array(n);
     s->depth = create_empty_array(n);
-
+    s->edgeHeap=initEdgeHeap(g);
     return s;
 } 
 
@@ -56,11 +86,6 @@ search_info_destroy(struct search_info *s)
     free(s);
 }
 
-/* used inside search routines */
-struct edge {
-    int u;          /* source */
-    int v;          /* sink */
-};
 
 /* stack/queue */
 struct queue {
@@ -77,7 +102,13 @@ push_edge(Graph g, int u, int v, void *data)
     q = data;
 
     assert(q->top < graph_edge_count(g) + 1);
-
+    /*FIXME: weight function needs to be at Graph level */
+    /*FIXME: sort by weight needs full list of edges ie: another array in the search_info struct*/
+    /* add random edge weight for now  */
+    int r = rand();
+    assert (r);
+    printf ("random weight: %d\n",r);
+    q->e[q->top].w = r;
     q->e[q->top].u = u;
     q->e[q->top].v = v;
     q->top++;
@@ -170,4 +201,11 @@ int isConnected(struct search_info *results){
         sizeOfPreOrder=(sizeof(results->preorder)/sizeof(int));
         printf ("sizeOfPreOrder:%d",sizeOfPreOrder);
         return nullParent && edgeValidation;
+}
+
+/*converts the graph associated with results into a MST graph with the save V,E */
+int kruskalMST(struct search_info * results){
+        Graph gTemp;
+        assert(gTemp);
+        return -9;
 }

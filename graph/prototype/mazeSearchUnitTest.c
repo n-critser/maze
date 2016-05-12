@@ -2,10 +2,13 @@
 #include <assert.h>
 
 #include "graph.h"
-#include "search.h"
+#include "mazeSearch.h"
 
 /* original size 199137 ? prime ?*/
 #define TEST_SIZE (25)
+
+int testIsConnected(struct  search_info *search);
+int testDfs(struct search_info *s);
 
 int
 main(int argc, char **argv)
@@ -32,7 +35,8 @@ main(int argc, char **argv)
     /* do dfs starting from 0 */
     s = search_info_create(g);
     int dfsTestResult;
-    testDfs(s);
+    dfsTestResult=testDfs(s);
+    assert(dfsTestResult ==0);
     int isConnected;
     isConnected= testIsConnected(s);
     printf ("isConnected : %d\n",isConnected);
@@ -121,7 +125,7 @@ int testDfs(struct search_info *s){
                         assert(s->depth[i] == i);
                 }
         }
-
+        return 0;
 
         
 }
