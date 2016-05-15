@@ -5,8 +5,10 @@
 #include "mazeSearch.h"
 /*srand for now*/
 #include <time.h>
-
-
+/*
+srand(time(NULL));
+int r = rand();
+*/
 
 
 /* create an array of n ints initialized to SEARCH_INFO_NULL */
@@ -38,18 +40,54 @@ struct heap {
         struct edge *e;
         int partition;
         int min;
+        int top;
+        int bottom;
+        int size;
 };
+static void
+pushEdgeToHeap(Graph g, int u, int v, void *data)
+{
+    struct heap *h;
+    h = data;
+    assert(h->size < graph_edge_count(g) + 1);
+    /*FIXME: weight function needs to be at Graph level */
+    /*FIXME: sort by weight needs full list of edges ie: another array in the search_info struct*/
+    /* add random edge weight for now  */
+    int r = rand();
+    assert (r);
+    printf ("random weight: %d\n",r);
+    h->e[h->top].w = r;
+    h->e[h->top].u = u;
+    h->e[h->top].v = v;
+    h->top++;
+    h->size++;
+}
 
 /* FIXME: add asserts and  unit test heap */
 /* FIXME: add heapInsert , percolateDown, and getMin for heap*/
 struct heap * initEdgeHeap(Graph g){
         struct heap * eH;
         eH = malloc(sizeof(*eH));
+        int i;
+        eH->top =0;
+        eH->bottom =0;
+        eH->size = 0;
+        eH->min=0;
+        eH->partition=0;
+        eH = malloc(sizeof(*eH));
         eH->e = malloc(sizeof(*eH->e) * (graph_edge_count(g) + 1));
         assert(eH);
+        for (i =0; i < graph_vertex_count(g);i++){
+                
+                /* push all outgoing edges */
+                /* SEG Faulting at edge of array probably overflow */
+                graph_foreach(g,i, pushEdgeToHeap, eH);
+
+        }
         return eH;
 };
-        
+
+
 
 /* allocate and initialize search results structure */
 /* you need to do this before passing it to dfs or bfs */
@@ -148,7 +186,7 @@ generic_search(struct search_info *r, int root, int use_queue)
         /* did we visit sink already? */
         if(r->parent[cur.v] != SEARCH_INFO_NULL) continue;
 
-        /* no */
+        /* no we have not reached all nodes yet*/
         assert(r->reached < graph_vertex_count(r->graph));
         r->parent[cur.v] = cur.u;
         r->time[cur.v] = r->reached;
@@ -203,9 +241,19 @@ int isConnected(struct search_info *results){
         return nullParent && edgeValidation;
 }
 
-/*converts the graph associated with results into a MST graph with the save V,E */
+/* converts the graph associated with results into a MST graph with the save V,E
+ * needed: List of edges E
+ *         Edges sorted by weight
+ *         test for cycles if edge E(i) added to current graph
+ *         When all edges have a parent then we have a connected graph
+ *         
+ */
 int kruskalMST(struct search_info * results){
+        
         Graph gTemp;
         assert(gTemp);
+        assert(results);
+        
+        
         return -9;
 }
