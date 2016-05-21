@@ -28,55 +28,46 @@ create_empty_array(int n)
     return a;
 }
 
-/* used inside search routines */
-struct edge {
-        int u;          /* source */
-        int v;          /* sink */
-        int w;          /* weight */
-};
 
-/*create a heap of edges for now can be a sorted array of edges */
-struct heap {
-        struct edge *e;
-        int partition;
-        int min;
-        int top;
-        int bottom;
-        int size;
-};
 static void
 pushEdgeToHeap(Graph g, int u, int v, void *data)
 {
     struct heap *h;
     h = data;
-    assert(h->size < graph_edge_count(g) + 1);
+    //assert(h->size < graph_edge_count(g) + 1);
     /*FIXME: weight function needs to be at Graph level */
     /*FIXME: sort by weight needs full list of edges ie: another array in the search_info struct*/
     /* add random edge weight for now  */
     int r = rand();
-    assert (r);
+    //assert (r);
+    //assert(h);
+    //assert(h->e);
+    /* top and bottom neither is initialized ? why  */
+    assert(h->bottom);
+    assert(h->top); // < graph_edge_count(g));
     printf ("random weight: %d\n",r);
     h->e[h->top].w = r;
     h->e[h->top].u = u;
     h->e[h->top].v = v;
     h->top++;
     h->size++;
+
 }
 
 /* FIXME: add asserts and  unit test heap */
 /* FIXME: add heapInsert , percolateDown, and getMin for heap*/
-struct heap * initEdgeHeap(Graph g){
-        struct heap * eH;
-        eH = malloc(sizeof(*eH));
+struct heap * initEdgeHeap(Graph g,struct heap *eH){
         int i;
-        eH->top =0;
-        eH->bottom =0;
+        eH->top=12;
+        eH->bottom =12;
         eH->size = 0;
         eH->min=0;
         eH->partition=0;
-        eH = malloc(sizeof(*eH));
-        eH->e = malloc(sizeof(*eH->e) * (graph_edge_count(g) + 1));
-        assert(eH);
+        //assert((eH->top==0) && (eH->bottom==0));
+        //eH = malloc(sizeof(*eH));
+
+        //assert(eH);
+        //assert(eH->top==0);
         for (i =0; i < graph_vertex_count(g);i++){
                 
                 /* push all outgoing edges */
@@ -84,7 +75,9 @@ struct heap * initEdgeHeap(Graph g){
                 graph_foreach(g,i, pushEdgeToHeap, eH);
 
         }
+        //assert(eH->size==graph_edge_count(g));
         return eH;
+        
 };
 
 
@@ -100,16 +93,18 @@ search_info_create(Graph g)
     s = malloc(sizeof(*s));
     assert(s);
 
+
+    s->edgeHeap= (struct heap *) malloc(sizeof(struct heap));
+    (s->edgeHeap)->e = (struct edge *) malloc(sizeof(struct edge) * (graph_edge_count(g) + 1));
+    initEdgeHeap(g,s->edgeHeap);
     s->graph = g;
     s->reached = 0;
-
     n = graph_vertex_count(g);
-
     s->preorder = create_empty_array(n);
     s->time = create_empty_array(n);
     s->parent = create_empty_array(n);
     s->depth = create_empty_array(n);
-    s->edgeHeap=initEdgeHeap(g);
+    
     return s;
 } 
 
@@ -121,6 +116,8 @@ search_info_destroy(struct search_info *s)
     free(s->parent);
     free(s->time);
     free(s->preorder);
+    free(s->edgeHeap->e);
+    free(s->edgeHeap);
     free(s);
 }
 
@@ -143,10 +140,13 @@ push_edge(Graph g, int u, int v, void *data)
     /*FIXME: weight function needs to be at Graph level */
     /*FIXME: sort by weight needs full list of edges ie: another array in the search_info struct*/
     /* add random edge weight for now  */
-    int r = rand();
+    /*
+      int r = rand();
     assert (r);
     printf ("random weight: %d\n",r);
     q->e[q->top].w = r;
+    */
+    
     q->e[q->top].u = u;
     q->e[q->top].v = v;
     q->top++;
@@ -197,7 +197,7 @@ generic_search(struct search_info *r, int root, int use_queue)
             r->depth[cur.v] = 0;
         } else {
             r->depth[cur.v] = r->depth[cur.u] + 1;
-            printf( "r->depth[%d] :%d\n",cur.v,r->depth[cur.v]);
+            //printf( "r->depth[%d] :%d\n",cur.v,r->depth[cur.v]);
         }
 
         /* push all outgoing edges */

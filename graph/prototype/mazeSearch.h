@@ -22,6 +22,23 @@
 
 #define SEARCH_INFO_NULL (-1) /* for empty slots */
 
+
+struct edge {
+        int w;
+        int u;
+        int v;
+};
+
+/*create a heap of edges for now can be a sorted array of edges */
+struct heap {
+        struct edge *e;
+        int partition;
+        int min;
+        int top;
+        int bottom;
+        int size;
+};
+
 struct search_info {
         Graph graph;
         int reached;        /* count of reached nodes */
@@ -29,7 +46,7 @@ struct search_info {
         int *time;          /* time[i] == position of node i in preorder list */
         int *parent;        /* parent in DFS or BFS forest */
         int *depth;         /* distance from root */
-        void *edgeHeap;      /* edgeHeap pointer */
+        struct heap *edgeHeap;      /* edgeHeap pointer */
 };
 
 /* allocate and initialize search results structure */
