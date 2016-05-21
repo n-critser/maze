@@ -58,7 +58,7 @@ pushEdgeToHeap(Graph g, int u, int v, void *data)
 /* FIXME: add heapInsert , percolateDown, and getMin for heap*/
 struct heap * initEdgeHeap(Graph g,struct heap *eH){
         int i;
-        eH->top=12;
+        eH->top=0;
         eH->bottom =12;
         eH->size = 0;
         eH->min=0;
@@ -94,8 +94,8 @@ search_info_create(Graph g)
     assert(s);
 
 
-    s->edgeHeap= (struct heap *) malloc(sizeof(struct heap));
-    (s->edgeHeap)->e = (struct edge *) malloc(sizeof(struct edge) * (graph_edge_count(g) + 1));
+    s->edgeHeap=  malloc(sizeof(struct heap));
+    s->edgeHeap->e =  malloc(sizeof(struct edge) * (graph_edge_count(g) + 1));
     initEdgeHeap(g,s->edgeHeap);
     s->graph = g;
     s->reached = 0;
