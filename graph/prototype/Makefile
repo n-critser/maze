@@ -5,8 +5,8 @@ DEPS=graph.h mazeSearch.h
 %.o: %.c $(DEPS)
 	$(CC) -c -o  $@ $< $(CFLAGS)
 
-mazeSearchUnitTest : mazeSearchUnitTest.o
-	gcc -o mazeSearchUnitTest mazeSearchUnitTest.o $(CFLAGS)
+#mazeSearchUnitTest : mazeSearchUnitTest.o
+#	gcc -o mazeSearchUnitTest mazeSearchUnitTest.o $(CFLAGS) $(DEPS)
 
 
 

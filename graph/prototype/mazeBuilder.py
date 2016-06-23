@@ -4,6 +4,19 @@ import json
 import pprint
 import random
 import graph as gh
+import logging
+
+
+import inspect
+
+def lineno():
+    """Returns the current line number in our program."""
+    return inspect.currentframe().f_back.f_lineno
+FORMAT = '%(asctime)-15s %(linenum)s %(method)-8s %(message)s'
+logging.basicConfig(format=FORMAT, level=logging.DEBUG)
+d = {'linenum': lineno(), 'method': 'main'}
+logger = logging.getLogger('mazeBuilder')
+logger.warning('Starting File: %s', 'mazeBuilder.py', extra=d)
 
 # classes necessary representing a maze
 #  graph, search, maze 
@@ -79,7 +92,7 @@ def maze_init_legal_move_list(graph,source):
         legalMoves[2]=source-1
         
     # else out of bounds ?
-    print legalMoves
+    #print legalMoves
     return legalMoves
 
 def maze_check_legal_move(graph,source,sink):
@@ -93,17 +106,20 @@ def maze_check_legal_move(graph,source,sink):
 
 def maze_connect_graph(graph):
     """connect all vertices in graph using each edge """
+    logger.warning('starting %s ', 'maze_connect_graph', extra={'linenum': lineno(), 'method':"maze_connect_graph"})
     edgeLists=[]
     for vertex in range(graph.n):
-        print "vertex:%d"%vertex
+        #print "vertex:%d"%vertex
         moveList=maze_init_legal_move_list(graph,vertex)
-        print "moveList:",moveList
+        #print "moveList:",moveList
         for move in moveList:
+            print "move:",move
             if move  > 0:
                 maze_add_edge(graph,vertex,move)
         edgeLists.append(graph.graph_edge_list(vertex))
-    print "vertex edge lists:",edgeLists
-    return #graph.edges
+    #print "vertex edge lists:",edgeLists
+    maze_print(graph)
+    return graph
         
     
 def maze_add_edge(graph,source,sink):
@@ -116,7 +132,7 @@ def maze_add_edge(graph,source,sink):
         graph.graph_add_edge(source,sink)
         # undirected graph add reverse edge 
         graph.graph_add_edge(sink,source)
-        maze_print(graph)
+        #maze_print(graph)
         return True
     
     print "source: %d , sink: %d"%(source,sink)
@@ -165,6 +181,7 @@ def maze_build_path(graph,source,sink,searchMethod):
 # Douglas Wilhelm Harder
 # https://ece.uwaterloo.ca/~dwharder/aads/Algorithms/Maze_generation/
 def maze_print(graph):
+    logger.warning('starting %s ', 'maze_print', extra={'linenum': lineno(),'method':''})
     n = graph.dim # columns
     m = graph.n/graph.dim # rows
     topString=""
@@ -281,8 +298,8 @@ def maze_find_wall_between_vertices(graph,source,sink):
     wallList[2]=leftWall
     bottomWall=rightWall+graph.dim-1
     wallList[3]=bottomWall
-    print "wallList:",wallList
-    print "source:%d , sink:%d, sourceRow:%d , sourceCol:%d "%(source, sink, sourceRow,sourceCol), "\nmoveList:",moveList , "\nWall:%d"%(wallList[moveDir])
+    #print "wallList:",wallList
+    #print "source:%d , sink:%d, sourceRow:%d , sourceCol:%d "%(source, sink, sourceRow,sourceCol), "\nmoveList:",moveList , "\nWall:%d"%(wallList[moveDir])
     return wallList[moveDir]#northWall#littleNode  #  
 """
 wallCount = 2*m*n-m-n
@@ -409,13 +426,14 @@ def kruskal(size, dim):
     # T = graph we are building from the connected , weighted graph
     # how to test if acyclic ? need some way to search the graph 
     #
+    print "************kruskal***********"
     T = maze_init(size,dim)
     G = maze_init(size,dim)
     nodeList=[0 for x in range(size)]
     nodeList[0]=1
     edgeList=[]
     print "nodeList:",nodeList, "\nlength:",len(nodeList)
-    maze_connect_graph(G)
+    G=maze_connect_graph(G)
     maze_print(G)
     for vertex in range(G.n):
         if nodeList[vertex]:
@@ -428,3 +446,4 @@ def kruskal(size, dim):
     dist=0 # distance from root
 
 kruskal(16,4)
+logger.warning('Ending File: %s ', 'mazeBuilder.py', extra={'linenum': lineno(), 'method': 'main'})
