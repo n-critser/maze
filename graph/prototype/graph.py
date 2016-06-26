@@ -8,8 +8,7 @@ class Successors:
         self.sList=[]
     def __str__(self):
         string=""
-        for i in range(0,self.d):
-            string+=str(self.sList[i])
+        string+=str(list(self.sList))
         return string
         
 
@@ -25,7 +24,7 @@ class Graph:
         # self.aList[1] index is vertex and contents are the list of successors 
 
     def __str__(self):
-        string=""
+        string="V:%d\nE:%d\nDIM:%d\n"%(self.n,self.m,self.dim)
         for i in range(0,self.n):
             string+=str(i)
             string+=":"

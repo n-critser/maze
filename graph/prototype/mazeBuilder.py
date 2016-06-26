@@ -132,6 +132,7 @@ def maze_init(vertices,dimension):
     mGraph=gh.Graph(vertices,dimension)
     n = mGraph.dim
     m = mGraph.n/mGraph.dim
+    e = mGraph.m
     print "n: %d , m: %d"%(n,m)
 
     wallCount=(2*m*n)-m-n
@@ -218,8 +219,8 @@ def maze_print(graph):
     for p in range(0,n-1):
         print "+--",
     print "+  +\n"
-    print "m : %d , n : %d"%(m,n)
     # end
+    # end of maze_print
 """
 need to do the reverse of this
 ###############################
@@ -400,14 +401,23 @@ class edge:
 
         
 
-def kruskal(size, dim):
-    """using maze functions and graph class create a maze using
-    kurskals algorithm:
+def get_span_tree(size, dim):
+    """get_span_tree:
+    using maze functions and graph class create a maze using
+    Ideas of kurskals algorithm:
+    Only we don't care about a minimum spanning tree
+    a maze only has to be a spanning tree 
     from : Algorithmic graph theory : 
     Input A connected weighted graph G = (V, E) with weight function w.
-    Output A minimum spanning tree of G.
+    Output A spanning tree of G.
+    Kruskals:
     sort the edges by lowest weight then add the next lowest edge
     until the graph has all vetices connected
+    get_span_tree:
+    since the edges don't have weight they are sorted from 0-n
+    with 0 being the root node of out spanning tree.
+    We then add vertices to the spanning tree
+    Based on the edge list of each vertex. 
     """
     # size = m
     # T = graph we are building from the connected , weighted graph
@@ -455,8 +465,10 @@ def kruskal(size, dim):
                 return -1
     print nodeList
     maze_print(T)
+    print T
     root = 0 # always start root at node 0 for now
     dist=0 # distance from root
+    return T
 
 def find_open_edge(edgeList,closedArray):
     print closedArray
@@ -488,5 +500,35 @@ def maze_connect_graph(graph):
     #maze_print(graph)
     return graph
 
-kruskal(16,4)
+maze1=get_span_tree(16,4)
+print maze1
+
+def write_maze_file(aMaze):
+    # add the sha512 hash of the maze_print(graph) to the file name
+    # this writes the specs of the graph but doesn't output the
+    # maze as seen by the user
+    logger.warning('starting %s ', 'write_maze_file', extra={'linenum': lineno(), 'method':""})
+    fileName="v"+str(aMaze.n)+"e"+str(aMaze.m)+"d"+str(aMaze.dim)
+    fileName+=".mz"
+    with open (fileName,'w')as mz:
+        mz.write(maze1.__str__())
+        mz.close()
+
+def write_maze_userView(aMaze):
+    # add the sha512 hash of the maze_print(graph) to the file name
+    # this writes the specs of the graph but doesn't output the
+    # maze as seen by the user
+    logger.warning('starting %s ', 'write_maze_userView', extra={'linenum': lineno(), 'method':""})
+    fileName="v"+str(aMaze.n)+"e"+str(aMaze.m)+"d"+str(aMaze.dim)
+    fileName+=".mazeUser"
+    with open (fileName,'w')as mz:
+        maze_print(aMaze)
+        #mz.write(maze_print(aMaze))
+        mz.close()
+
+write_maze_file(maze1)
+# must refactor the maze_print to output a string buffer !
+# either that or use the following redirect of prints
+# http://stefaanlippens.net/redirect_python_print
+#write_maze_userView(maze1)
 logger.warning('Ending File: %s ', 'mazeBuilder.py', extra={'linenum': lineno(), 'method': 'main'})
