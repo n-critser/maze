@@ -459,8 +459,14 @@ def kruskal(size, dim):
     dist=0 # distance from root
 
 def find_open_edge(edgeList,closedArray):
+    print closedArray
+    # need to add randomness to the process otherwise is always the same graph
+    #random.randint(0,len(G.graph_edge_list(vertex))-1)
+    tempList=list(edgeList)
+    # copy edgeList, remove closedArray elements, then random shuffle
+    # tempList.shuffle()
     for edge in edgeList:
-        if !closedArray[edge]:
+        if (not closedArray[edge]):
             return edge
     return -1
     
