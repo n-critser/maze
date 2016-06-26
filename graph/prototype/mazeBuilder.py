@@ -5,7 +5,7 @@ import pprint
 import random
 import graph as gh
 import logging
-
+from collections import deque
 
 import inspect
 
@@ -37,8 +37,8 @@ maze requirements
 
 """
 moves=("north","east","south","west")
-print moves
-print moves[1]
+#print moves
+#print moves[1]
 def maze_init_legal_move_list(graph,source):
     """create list of legal moves based on graph dims"""
     assert(source < graph.n)
@@ -54,13 +54,13 @@ def maze_init_legal_move_list(graph,source):
     # left column
     if (source % graph.dim) == 0:
         assert source % graph.dim ==0
-        print "left column"
+        #print "left column"
         # east
         legalMoves[1]=source+1
         # west
     # right column
     elif (source % graph.dim) ==graph.dim-1:
-        print "right column"
+        #print "right column"
         #east nop
         #west
         legalMoves[2]=source-1
@@ -72,12 +72,12 @@ def maze_init_legal_move_list(graph,source):
         legalMoves[1]=source+1
         #west
         legalMoves[2]=source-1
-        print "****top row not a corner"
+        #print "****top row not a corner"
     #bottom row not a corner
     elif (source/graph.dim) == (graph.n-1)/graph.dim:
         assert source - graph.dim < graph.n
         assert source + graph.dim > graph.n
-        print "****not a corner botton row"
+        #print "****not a corner botton row"
         #east 
         legalMoves[1]=source+1
         #west
@@ -85,7 +85,7 @@ def maze_init_legal_move_list(graph,source):
     else :
         # we should only reach this else when the source is valid
         # and when source is not an edge node so add all 4 legal moves
-        print "*ELSE* CONdition 4 legal moves"
+        #print "*ELSE* CONdition 4 legal moves"
         #east 
         legalMoves[1]=source+1
         #west
@@ -98,28 +98,12 @@ def maze_init_legal_move_list(graph,source):
 def maze_check_legal_move(graph,source,sink):
     moveList=maze_init_legal_move_list(graph,source)
     if sink in moveList:
-        print "move **IS** legal"
+        #print "move **IS** legal"
         return True
     else:
-        print "move is *NOT* legal"
+        #print "move is *NOT* legal"
         return False
 
-def maze_connect_graph(graph):
-    """connect all vertices in graph using each edge """
-    logger.warning('starting %s ', 'maze_connect_graph', extra={'linenum': lineno(), 'method':"maze_connect_graph"})
-    edgeLists=[]
-    for vertex in range(graph.n):
-        #print "vertex:%d"%vertex
-        moveList=maze_init_legal_move_list(graph,vertex)
-        #print "moveList:",moveList
-        for move in moveList:
-            print "move:",move
-            if move  > 0:
-                maze_add_edge(graph,vertex,move)
-        edgeLists.append(graph.graph_edge_list(vertex))
-    #print "vertex edge lists:",edgeLists
-    maze_print(graph)
-    return graph
         
     
 def maze_add_edge(graph,source,sink):
@@ -375,6 +359,7 @@ maze_add_edge(graph,2,3)
 maze_add_edge(graph,3,11)
 maze_add_edge(graph,7,6)
 maze_add_edge(graph,15,14)
+maze_print(graph)
 #maze_add_edge(graph,10,18)
 #maze_add_edge(graph,30,31)
 #maze_add_edge(graph,26,18)
@@ -421,29 +406,81 @@ def kruskal(size, dim):
     from : Algorithmic graph theory : 
     Input A connected weighted graph G = (V, E) with weight function w.
     Output A minimum spanning tree of G.
+    sort the edges by lowest weight then add the next lowest edge
+    until the graph has all vetices connected
     """
     # size = m
     # T = graph we are building from the connected , weighted graph
     # how to test if acyclic ? need some way to search the graph 
-    #
+    # 
     print "************kruskal***********"
+    logger.warning('size: %d , dim: %d',size,dim , extra={'linenum': lineno(), 'method':"maze_connect_graph"})
     T = maze_init(size,dim)
     G = maze_init(size,dim)
+    maze_print(G)
     nodeList=[0 for x in range(size)]
     nodeList[0]=1
+    openList=list()
+    for elem in range(size):
+        openList.append(elem)
+    print "openList:",openList
+    print "openList length:", len(list(openList))
     edgeList=[]
     print "nodeList:",nodeList, "\nlength:",len(nodeList)
-    G=maze_connect_graph(G)
+    maze_connect_graph(G)
+    maze_add_edge(G,1,2)
     maze_print(G)
-    for vertex in range(G.n):
-        if nodeList[vertex]:
-            print "already in"
+    maze_print(T)
+    vertex=openList.pop(0)
+    #for vertex in range(G.n):
+    while len(list(openList)) > 0:
+        # get the edge list for the vertex
+        choice=None #random.randint(0,len(G.graph_edge_list(vertex))-1)
+        edges=G.graph_edge_list(vertex)
+        
+        sink=find_open_edge(edges,nodeList)
+        if nodeList[vertex] and vertex!= 0:
+            print "already  have :",vertex
         else:
             print "adding: vertex %d"%vertex
+            print edges
+            print "sink: ", sink
             nodeList[vertex]=1
+            maze_add_edge(T,vertex,sink)
+            if (sink in openList):
+                vertex=openList.pop(openList.index(sink))
+            else :
+                
+                print "unable to pull vertex from openList"
+                return -1
     print nodeList
+    maze_print(T)
     root = 0 # always start root at node 0 for now
     dist=0 # distance from root
+
+def find_open_edge(edgeList,closedArray):
+    for edge in edgeList:
+        if !closedArray[edge]:
+            return edge
+    return -1
+    
+def maze_connect_graph(graph):
+    """connect all vertices in graph using each edge """
+    logger.warning('starting %s ', 'maze_connect_graph', extra={'linenum': lineno(), 'method':"maze_connect_graph"})
+    edgeLists=[]
+    #print graph
+    for vertex in range(graph.n):
+        print "vertex:%d"%vertex
+        moveList=maze_init_legal_move_list(graph,vertex)
+        print "moveList:",moveList
+        for move in moveList:
+            #print "move:",move
+            if move  > 0:
+                maze_add_edge(graph,vertex,move)
+        edgeLists.append(graph.graph_edge_list(vertex))
+    #print "vertex edge lists:",edgeLists
+    #maze_print(graph)
+    return graph
 
 kruskal(16,4)
 logger.warning('Ending File: %s ', 'mazeBuilder.py', extra={'linenum': lineno(), 'method': 'main'})
