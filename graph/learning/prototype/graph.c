@@ -78,6 +78,7 @@ graph_add_edge(Graph g, int u, int v)
         g->alist[u] =
             realloc(g->alist[u], 
                 sizeof(struct successors) + sizeof(int) * (g->alist[u]->len - 1));
+        printf ("length of list: %d",g->alist[u]->len);
     }
 
     /* now add the new sink */
