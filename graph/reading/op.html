@@ -1,0 +1,403 @@
+<html>
+<title>C operator reference</title>
+<body bgcolor=#e51eca3d8b85 >
+<a href="http://www.cs.mun.ca/~michael/c/op.html"><h1>Resource Location: http://www.cs.mun.ca/~michael/c/op.html</h1></a>
+This is a list of the C operators, their precedence, associativity
+and what they do.<br>
+Some notes about this list:
+<ul>
+<li> <em>exprN</em> is any expression.
+<li> <em>lvalueN</em> is any expression that can be assigned to
+     (comes from `left-hand value' of assignment operator).
+<li> operators are listed in increasing order of precedence,
+     <i>ie</i>, operators towards the bottom of the list
+     bind closer that operators towards the top of the list.
+     So, <code>2&nbsp;+&nbsp;3&nbsp;*&nbsp;6</code> is evaluated as
+     <code>2&nbsp;+&nbsp;(3&nbsp;*&nbsp;6)</code>, since <code>*</code>
+     has a higher precidence (is closer to the bottom) than <code>+</code>.
+     Operators with the same precedence are grouped in the
+     same table entry.
+<li> the associativity of the operators is indicated in the
+     second column.  Left associativity means things are
+     evaluated left to right, ie, 2&nbsp;-&nbsp;3&nbsp;-&nbsp;4 is
+     (2&nbsp;-&nbsp;3)&nbsp;-&nbsp;4, not 2&nbsp;-&nbsp;(3&nbsp;-&nbsp;4).
+</ul>
+
+
+<p>
+<table border>
+<tr>
+    <th nowrap><em>expr1</em> <strong>,</strong> <em>expr2</em>
+    <td align=center> Comma <br>
+	<small>(left assoc)</small>
+    <td>
+	Used to separate expressions:
+	    <p align=center>
+	    <code> b = a + 3, c = b * 2 + 1</code>
+	    </p>
+	assigns <code>a&nbsp;+&nbsp;3</code> to <code>b</code> and assigns
+	<code>b&nbsp;*&nbsp;2&nbsp;+&nbsp;1</code> to <code>c</code>.
+	<em>expr1</em> is evaluated first, then <em>expr2</em>;
+	the value of the expression is that of <em>expr2</em>.
+
+<tr>
+    <th nowrap><em>lvalue1</em> <strong>=</strong> <em>expr1</em>
+    <td align=center> Assignment <br>
+	<small>(right assoc)</small>
+    <td>
+	Assigns the value of <em>expr1</em> to <em>lvalue1</em>:
+	    <p align=center>
+	    <code> a = 3 * 4 </code>
+	    </p>
+	<em>expr1</em> is evaluated before <em>lvalue1</em>.
+	The <code>=</code> can be preceded by any binary arithmetic
+	operator, eg,
+	    <p align=center>
+	    <em>lvalue1</em> <code>+=</code> <em>expr1</em>
+	    <code> += 3 </code>
+	    </p>
+	which is (almost) equivalent to
+	    <p align=center>
+	    <em>lvalue1</em> <code>=</code> <em>lvalue1</em>
+		<code>+</code> (<em>expr1</em>)
+	    </p>
+	(almost because <em>lvalue1</em> is evaluated once, not twice).
+	Valid assignment operators are:<br>
+	    <blockquote>
+	      =    <br>
+	      +=  -=  *=  /=  %=<br>
+	      &amp;=  |=  ^=  <br>
+	      &lt;&lt;=  &gt;&gt;=   <br>
+	    </blockquote>
+
+<tr>
+    <th nowrap><em>expr1</em> <strong>?</strong> <em>expr2</em>
+				<strong>:</strong> <em>expr3</em>
+    <td align=center> Conditional <br>
+	<small>(left assoc)</small>
+    <td>
+	If <em>expr1</em> evaluates to a non-zero value, <em>expr2</em>
+	is evaluated, otherwise <em>expr3</em> is evaluated.
+	The value of the expression as a whole is which ever
+	of <em>expr2</em> or <em>expr3</em> is evaluated (this means
+	the type of <em>expr2</em> and <em>expr3</em> must be the same).
+	Example:
+	    <p align=center>
+	    <code> a = b &lt; 0 ? -b : b</code>
+	    </p>
+	<code>a</code> is assigned the absolute value of <code>b</code>.
+
+<tr>
+    <th nowrap><em>expr1</em> <strong>||</strong> <em>expr2</em>
+    <td align=center> Logical Or <br>
+	<small>(left assoc)</small>
+    <td>
+	Evaluates to true (1) if either <em>expr1</em> or <em>expr2</em>
+	evaluates to true (non-zero), otherwise evaluates to false (zero).
+	<em>expr2</em> is evaluated if and only if <em>expr1</em> evaluates
+	to false (zero).
+	Example:
+	    <p align=center>
+	    <code> a == 0 || 10 / a == 0</code>
+	    </p>
+	returns true if <code>a</code> is zero or if
+	<code>10&nbsp;/&nbsp;a</code> is zero - note that
+	<code>10&nbsp;/&nbsp;a</code> is not evaluated if <code>a</code> is 0.
+
+<tr>
+    <th nowrap><em>expr1</em> <strong>&amp;&amp;</strong> <em>expr2</em>
+    <td align=center> Logical And <br>
+	<small>(left assoc)</small>
+    <td>
+	Evaluates to true (1) if both <em>expr1</em> and <em>expr2</em>
+	evaluate to true (non-zero), otherwise evaluates to false (zero).
+	<em>expr2</em> is evaluated if and only if <em>expr1</em> evaluates
+	to true (non-zero).
+	Example:
+	    <p align=center>
+	    <code> a != 0 &amp;&amp; 10 / a != 0</code>
+	    </p>
+	returns true if <code>a</code> is non-zero and if
+	<code>10&nbsp;/&nbsp;a</code> is non-zero - note that
+	<code>10&nbsp;/&nbsp;a</code> is not evaluated if <code>a</code> is 0.
+
+<tr>
+    <th nowrap><em>expr1</em> <strong>|</strong> <em>expr2</em>
+    <td align=center> Bitwise Or <br>
+	<small>(left assoc)</small>
+    <td>
+	Returns the bit-wise or of <em>expr1</em> and <em>expr2</em>
+	Example:
+	    <p align=center>
+	    <code> 0x12 | 0x58</code>
+	    </p>
+	returns 0x5A (all the set bits of 0x12 and 0x58 are combined).
+
+<tr>
+    <th nowrap><em>expr1</em> <strong>^</strong> <em>expr2</em>
+    <td align=center> Bitwise Exclusive-or <br>
+	<small>(left assoc)</small>
+    <td>
+	Returns the bit-wise exclusive-or (xor) of <em>expr1</em> and
+	<em>expr2</em>
+	Example:
+	    <p align=center>
+	    <code> 0x12 ^ 0x58</code>
+	    </p>
+	returns 0x4A (the set bits in the result are those that are
+	set in either 0x12 or 0x58, but not set in both).
+
+<tr>
+    <th nowrap><em>expr1</em> <strong>&amp;</strong> <em>expr2</em>
+    <td align=center> Bitwise And <br>
+	<small>(left assoc)</small>
+    <td>
+	Returns the bit-wise and of <em>expr1</em> and <em>expr2</em>
+	Example:
+	    <p align=center>
+	    <code> 0x12 & 0x58</code>
+	    </p>
+	returns 0x10 (the set bits in the result are those that are
+	set in both 0x12 and 0x58).
+
+<tr>
+    <th nowrap><em>expr1</em> <strong>==</strong> <em>expr2</em><br>
+	       <em>expr1</em> <strong>!=</strong> <em>expr2</em><br>
+    <td align=center> Equality,<br>Inequality<br>
+	<small>(left assoc)</small>
+    <td>
+	<dl>
+	<dt> <code>==</code>
+	    <dd> returns true (1) if <em>expr1</em> and <em>expr2</em>
+	         are equal, returns false (0) otherwise;<br>
+	<dt> 
+	<code>!=</code>
+	    <dd> returns true (1) if <em>expr1</em> and <em>expr2</em>
+		 are not equal, returns false (0) otherwise.
+	</dl>
+	Example:
+	    <p align=center>
+	    <code> a + 2 == b * 5 </code>
+	    </p>
+	<dl>
+	<dt> <strong>NOTE:</strong><dd>
+		A common mistake is to use <code>=</code> as
+		an equality test instead of <code>==</code>.
+	</dl>
+
+<tr>
+    <th nowrap><em>expr1</em> <strong>&lt;=</strong> <em>expr2</em><br>
+	       <em>expr1</em> <strong>&gt;=</strong> <em>expr2</em><br>
+	       <em>expr1</em> <strong>&lt;</strong> <em>expr2</em><br>
+	       <em>expr1</em> <strong>&gt;</strong> <em>expr2</em>
+    <td align=center> Comparison<br>
+	<small>(left assoc)</small>
+    <td>
+	<dl>
+	<dt> <code>&lt;=</code>
+	    <dd> returns true (1) if <em>expr1</em> is less than or equal
+		 to <em>expr2</em>, returns false (0) otherwise;
+	<dt> <code>&gt;=</code>
+	    <dd> returns true (1) if <em>expr1</em> is greater than or equal
+		 to <em>expr2</em>, returns false (0) otherwise;
+	<dt> <code>&lt;</code>
+	    <dd> returns true (1) if <em>expr1</em> is strictly less than
+		 to <em>expr2</em>, returns false (0) otherwise;
+	<dt> <code>&gt;</code>
+	    <dd> returns true (1) if <em>expr1</em> is strictly greater than
+		 to <em>expr2</em>, returns false (0) otherwise.
+	</dl>
+	Example:
+	    <p align=center>
+	    <code> a + 2 &lt;= b * 5 </code>
+	    </p>
+
+<tr>
+    <th nowrap><em>expr1</em> <strong>&lt;&lt;</strong> <em>expr2</em><br>
+	       <em>expr1</em> <strong>&gt;&gt;</strong> <em>expr2</em>
+    <td align=center> Left&nbsp;Shift<br> Right&nbsp;Shift<br>
+	<small>(left assoc)</small>
+    <td>
+	<dl>
+	<dt> <code>&lt;&lt;</code>
+	    <dd> returns <em>expr1</em> shifted left <em>expr2</em> bit
+		 positions; 0 bits are shifted into the low order bits.
+		 Mathematically equivalent to
+			<em>expr1</em>&nbsp;*&nbsp;2<sup><em>expr2</em></sup>
+		 (note that there is no exponentiation operator in C,
+		 nor in netscape 1.1n :-)).
+	<dt> <code>&gt;&gt;</code>
+	    <dd> returns <em>expr1</em> shifted right <em>expr2</em> bit
+		 positions; if the type of <em>expr1</em> is signed,
+		 1 bits are shifted into the high order bits, otherwise
+		 0 bits are shifted in.
+		 Mathematically equivalent to
+			<em>expr1</em>&nbsp;/&nbsp;2<sup><em>expr2</em></sup>.
+	</dl>
+	Example:
+	    <p align=center>
+	    <code> b = 0x12 << 2 </code>
+	    </p>
+	b is assigned the value 0x48.
+
+<tr>
+    <th nowrap><em>expr1</em> <strong>+</strong> <em>expr2</em><br>
+	       <em>expr1</em> <strong>-</strong> <em>expr2</em>
+    <td align=center> Addition<br> Subtraction<br>
+	<small>(left assoc)</small>
+    <td>
+	<dl>
+	<dt> <code>+</code>
+	    <dd> returns <em>expr1</em> plus <em>expr2</em>;
+		 if the type of one of the expressions is a pointer type,
+		 a pointer to the i<em>th</em> element is returned, where
+		 i is the other expression. <i>Ie</ti>,
+		 <code>p&nbsp;+&nbsp;10</code> is the same as
+		 <code>&((p)[10])</code>.
+	<dt> <code>-</code>
+	    <dd> returns <em>expr1</em> minus <em>expr2</em>;
+		 if the type of one of the expressions is a pointer type,
+		 a pointer to the -i<em>th</em> element is returned, where
+		 i is the other expression. <i>Ie</ti>,
+		 <code>p&nbsp;-&nbsp;10</code> is the same as
+		 <code>&((p)[-10])</code>.
+	</dl>
+	Example:
+	    <p align=center>
+	    <code> 2 + 3 - 10</code>
+	    </p>
+	returns 11.
+
+<tr>
+    <th nowrap><em>expr1</em> <strong>*</strong> <em>expr2</em><br>
+	       <em>expr1</em> <strong>/</strong> <em>expr2</em><br>
+	       <em>expr1</em> <strong>%</strong> <em>expr2</em>
+    <td align=center> Multiplication<br> Division<br> Modulus<br>
+	<small>(left assoc)</small>
+    <td>
+	<dl>
+	<dt> <code>*</code>
+	    <dd> returns <em>expr1</em> times <em>expr2</em>.
+	<dt> <code>/</code>
+	    <dd> returns <em>expr1</em> divided by <em>expr2</em>;
+	    if <em>expr1</em> and <em>expr2</em> are both integer expressions,
+	    the result is also an integer (ie, result is truncated).
+	    If <em>expr2</em> evaluates to zero, an exception will
+	    be generated (ie, the program will dump core).
+	<dt> <code>%</code>
+	    <dd> returns the remainder of <em>expr1</em> divided by
+	    <em>expr2</em>;
+	    both <em>expr1</em> and <em>expr2</em> must be integer expressions.
+	    If <em>expr2</em> evaluates to zero, an exception will
+	    be generated (ie, the program will dump core).
+	</dl>
+	Example:
+	    <p align=center>
+	    <code> 4 * 3 </code><br>
+	    <code> 14 / 3 </code><br>
+	    <code> 14 % 3 </code><br>
+	    </p>
+	return 12, 4 and 2, respectively.
+
+<tr>
+    <th nowrap><strong>*</strong> <em>expr1</em><br>
+	       <strong>&amp;</strong> <em>lvalue1</em><br>
+	       <strong>-</strong> <em>expr1</em><br>
+	       <strong>+</strong> <em>expr1</em><br>
+	       <strong>~</strong> <em>expr1</em><br>
+	       <strong>!</strong> <em>expr1</em><br>
+	       <strong>++</strong> <em>lvalue1</em><br>
+	       <em>lvalue1</em> <strong>++</strong><br>
+	       <strong>--</strong> <em>lvalue1</em><br>
+	       <em>lvalue1</em> <strong>--</strong><br>
+	       <strong>(</strong> <em>type-cast</em><strong>)</strong> <em>expr1</em>
+    <td align=center> De-reference<br>
+		Address-of<br>
+		Negation<br>
+		no-op<br>
+		Bitwise&nbsp;Compliment<br>
+		Logical&nbsp;Compliment<br>
+		Pre-Increment<br>
+		Post-Increment<br>
+		Pre-Decrement<br>
+		Post-Decrement<br>
+		Type&nbsp;Cast<br>
+	<small>(right assoc)</small>
+    <td>
+	<dl>
+	<dt> <code>*</code>
+	    <dd> returns what <em>expr1</em> points to
+	<dt> <code>&</code>
+	    <dd> returns the address of <em>lvalue1</em>.
+	<dt> <code>-</code>
+	    <dd> returns the negation of <em>expr1</em>.
+	<dt> <code>+</code>
+	    <dd> returns <em>expr1</em> (does nothing,
+		 added by ANSI to provide symmetry with the
+		 unary <code>-</code>&nbsp;operator).
+	<dt> <code>~</code>
+	    <dd> returns the bitwise compliment of <em>expr1</em>,
+		 <i>ie</i>, all the bits are flipped.
+	<dt> <code>!</code>
+	    <dd> returns the logical compliment of <em>expr1</em>:
+		 if <em>expr1</em> evaluates to true (non-zero),
+		 it it returns 0; otherwise it returns 1.
+	<dt> <code>++</code>
+	    <dd> the pre-increment version adds 1 to <em>lvalue1</em>
+		 and returns the result; the post-increment
+		 version adds 1 to <em>lvalue1</em> and returns the
+		 original value of <em>lvalue1</em>.
+		 If <em>lvalue1</em> is a pointer, the size of the
+		 type pointed to is added instead of 1 (<i>ie</i>, 
+		 the pointer will be incremented enough to point to
+		 the next object).
+	<dt> <code>--</code>
+	    <dd> Like <code>++</code>, except subtraction is used.
+	<dt> <code>(</code><em>type-cast</em><code>)</code>
+	    <dd> the type of <em><expr1></em> is coerced to the
+		 type indicated by <em>type-cast</em>.
+		 Example:
+			<p align=center>
+			(int) 2.3
+			</p>
+		results in an integer-type expression with the value 2.
+	</dl>
+
+<tr>
+    <th nowrap><em>expr1</em> <strong>-></strong> <em>field</em><br>
+	       <em>lvalue1</em> <strong>.</strong> <em>field</em><br>
+	       <em>expr1</em><strong>[</strong><em>expr2</em><strong>]</strong><br>
+	       <strong>(</strong> <em>expr1</em> <strong>)</strong> 
+    <td align=center> Structure&nbsp;De-reference<br>
+		      Structure&nbsp;Reference<br>
+		      Array&nbsp;Reference<br>
+		      Parentheses<br>
+	<small>(left assoc)</small>
+    <td>
+	<dl>
+	<dt> <code>-></code>
+	    <dd> returns the value of <em>field</em> in the structure
+		 pointed to by <em>expr1</em>.
+	<dt> <code>.</code>
+	    <dd> returns the value of <em>field</em> in the structure
+		 <em>lvalue1</em>.
+	<dt> <code>[</code>...<code>]</code>
+	    <dd> returns the <em>expr2</em>th element of the `array'
+		 pointed to by <em>expr1</em>.
+		 Exactly equivalent to:
+		 <p align=center>
+			<code>*(</code><em>expr1</em> <code>+ (</code><em>expr2</em><code>))</code>
+		 </p>
+	<dt> <code>(</code>...<code>)</code>
+	    <dd> result returned is that of <em>expr1</em>.  Used to
+		override the default precedence.
+		Example:
+		    <p align=center>
+		    <code> 3 * (2 + 3) </code><br>
+		    </p>
+		returns 15.
+	</dl>
+
+</table>
+</body>
+</html>
