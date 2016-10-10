@@ -511,7 +511,7 @@ def write_maze_file(aMaze):
     fileName="v"+str(aMaze.n)+"e"+str(aMaze.m)+"d"+str(aMaze.dim)
     fileName+=".mz"
     with open (fileName,'w')as mz:
-        mz.write(maze1.__str__())
+        mz.write(aMaze.__str__())
         mz.close()
 
 def write_maze_userView(aMaze):
